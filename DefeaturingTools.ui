@@ -313,8 +313,8 @@ of the selected Objects</string>
    <widget class="QPushButton" name="PB_check_TypeId">
     <property name="geometry">
      <rect>
-      <x>276</x>
-      <y>396</y>
+      <x>188</x>
+      <y>360</y>
       <width>81</width>
       <height>28</height>
      </rect>
@@ -412,7 +412,7 @@ of the selected Objects</string>
     <property name="geometry">
      <rect>
       <x>188</x>
-      <y>360</y>
+      <y>396</y>
       <width>81</width>
       <height>28</height>
      </rect>
@@ -428,7 +428,7 @@ of the selected Objects</string>
     <property name="geometry">
      <rect>
       <x>276</x>
-      <y>360</y>
+      <y>396</y>
       <width>81</width>
       <height>28</height>
      </rect>
@@ -563,6 +563,22 @@ of the selected Objects</string>
     </property>
     <property name="text">
      <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_makeEdge">
+    <property name="geometry">
+     <rect>
+      <x>276</x>
+      <y>360</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">make Edge from selected Vertexes</string>
+    </property>
+    <property name="text">
+     <string notr="true">mk Edge</string>
     </property>
    </widget>
   </widget>

@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.1.0"
+__version__ = "v1.1.1"
 
 invert = False #True
 rh_edges = []
@@ -856,49 +856,34 @@ def copyFaces_RH():
         clear_all_RH()
 ##
 
-def addFaces_RH_old():
-    global rh_edges, rh_faces, rh_obj
-    global rh_edges_names, rh_faces_names, rh_obj_name
-    global created_faces, rh_faces_indexes, rh_edges_to_connect
+def makeEdge_RH():
     global force_recompute
     doc=FreeCAD.ActiveDocument
     docG = FreeCADGui.ActiveDocument
-    #rh_edges = []; rh_edges_names = []; created_faces = []
-    #rh_edges_to_connect = []
-    af_edges = [];af_edges_names = []
+    verts = []; verts_names = []
     selEx=FreeCADGui.Selection.getSelectionEx()
+    verts = []
     if len (selEx):
-        for selEdge in selEx:
-            for i,e in enumerate(selEdge.SubObjects):
+        for selV in selEx:
+            for i,v in enumerate(selV.SubObjects):
             #for e in selEdge.SubObjects
-                if 'Edge' in selEdge.SubElementNames[i]:
-                    af_edges.append(e)
-                    af_edges_names.append(selEdge.SubElementNames[i])
-                    print(selEdge.SubElementNames[i])
-    if len(af_edges) > 0:
-        #try:
-        #    print("try to makeFilledFace")
-        #    cf=Part.makeFilledFace(Part.__sortEdges__(af_edges))
-        #except:
-        #    print("makeFilledFace failed\ntry to create a Face w/ OpenSCAD2Dgeom")
-        #    cf = OpenSCAD2Dgeom.edgestofaces(af_edges)
-        if not invert:
-            try:
-                print("try to create a Face w/ OpenSCAD2Dgeom")
-                cf = OpenSCAD2Dgeom.edgestofaces(af_edges)
-            except:
-                print("OpenSCAD2Dgeom failed\ntry to makeFilledFace")
-                cf=Part.makeFilledFace(Part.__sortEdges__(af_edges))
-        else:
-            try:
-                print("try to makeFilledFace")
-                cf=Part.makeFilledFace(Part.__sortEdges__(af_edges))
-            except:
-                print("makeFilledFace failed\ntry to create a Face w/ OpenSCAD2Dgeom")
-                cf = OpenSCAD2Dgeom.edgestofaces(af_edges)
-        #created_faces.append(cf)
-        Part.show(cf)
-        doc.ActiveObject.Label = "Face"
+                if 'Vertex' in selV.SubElementNames[i]:
+                    verts.append(v)
+                    verts_names.append(selV.SubElementNames[i])
+                    print(selV.SubElementNames[i])
+    if len(verts) == 2:
+        try:
+            i_say("try to create an Edge w/ makeLine")
+            ce = Part.makeLine(verts[0].Point, verts[1].Point)
+            Part.show(ce)
+            del ce
+            doc.ActiveObject.Label = "Face"
+        except:
+            i_sayerr("failed to create a Line")
+    else:
+        i_sayerr("select only 2 Vertexes")
+    for ob in FreeCAD.ActiveDocument.Objects:
+        FreeCADGui.Selection.removeSelection(ob)
 ##
 def addEdges_RH():
     global rh_edges, rh_faces, rh_obj
@@ -909,7 +894,7 @@ def addEdges_RH():
     docG = FreeCADGui.ActiveDocument
     #rh_edges = []; rh_edges_names = []; created_faces = []
     #rh_edges_to_connect = []
-    ae_edges = [];ae_edges_names = []
+    ae_edges = rh_edges;ae_edges_names = rh_edges_names
     selEx=FreeCADGui.Selection.getSelectionEx()
     if len (selEx):
         for selEdge in selEx:
@@ -928,21 +913,25 @@ def addEdges_RH():
         #    ce = Part.Wire(OpenSCAD2Dgeom.edgestowires(ae_edges))
         if not invert:
             try:
-                print("try to create a Face w/ OpenSCAD2Dgeom")
-                ce = OpenSCAD2Dgeom.edgestofaces(ae_edges)
+                print("try to create an Edge w/ OpenSCAD2Dgeom")
+                ce = Part.Wire(OpenSCAD2Dgeom.edgestowires(ae_edges))
+                #OpenSCAD2Dgeom.edgestofaces(ae_edges)
             except:
-                print("OpenSCAD2Dgeom failed\ntry to makeFilledFace")
-                ce=Part.makeFilledFace(Part.__sortEdges__(ae_edges))
+                print("OpenSCAD2Dgeom failed\ntry to makeWire")
+                ce=Part.Wire(Part.__sortEdges__(ae_edges))
+                #Part.makeFilledFace(Part.__sortEdges__(ae_edges))
         else:
             try:
-                print("try to makeFilledFace")
-                ce=Part.makeFilledFace(Part.__sortEdges__(ae_edges))
+                print("try to makeWire")
+                ce=Part.Wire(Part.__sortEdges__(ae_edges))
             except:
-                print("makeFilledFace failed\ntry to create a Face w/ OpenSCAD2Dgeom")
+                print("makeWire failed\ntry to create an Edge w/ OpenSCAD2Dgeom")
                 ce = OpenSCAD2Dgeom.edgestofaces(ae_edges)
         #created_faces.append(cf)
         Part.show(ce)
         doc.ActiveObject.Label = "Edge"
+        if len(rh_edges) > 0:
+            clear_all_RH()
 ##
 def showEdges_RH():
     global rh_edges, rh_faces, rh_obj
@@ -991,16 +980,6 @@ PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0g
 """
 
 ####################################
-    #def closeEvent(self, evnt):
-    #    stop
-    #    self.deleteLater()
-    #def closeEvent(self, DockWidget):
-    #    # Let the Exit button handle tab closing
-    #    print "close event captured. Do nothing."
-    # def closeEvent(self, event):
-    #     print('event close captured')
-## https://stackoverflow.com/questions/14834494/pyqt-clicking-x-doesnt-trigger-closeevent
-## http://www.pythonexample.com/code/pyside-uic.loadui/    
 class Ui_DockWidget(object):
     def setupUi(self, DockWidget):
         DockWidget.setObjectName("DockWidget")
@@ -1106,7 +1085,7 @@ class Ui_DockWidget(object):
         self.PB_makeShell_2.setText("mk Solid 2")
         self.PB_makeShell_2.setObjectName("PB_makeShell_2")
         self.PB_check_TypeId = QtGui.QPushButton(self.dockWidgetContents)
-        self.PB_check_TypeId.setGeometry(QtCore.QRect(276, 396, 81, 28))
+        self.PB_check_TypeId.setGeometry(QtCore.QRect(188, 360, 81, 28))
         font = QtGui.QFont()
         font.setWeight(50)
         font.setItalic(False)
@@ -1140,12 +1119,12 @@ class Ui_DockWidget(object):
         self.PB_showFaceList.setText("show Faces")
         self.PB_showFaceList.setObjectName("PB_showFaceList")
         self.PB_Refine = QtGui.QPushButton(self.dockWidgetContents)
-        self.PB_Refine.setGeometry(QtCore.QRect(188, 360, 81, 28))
+        self.PB_Refine.setGeometry(QtCore.QRect(188, 396, 81, 28))
         self.PB_Refine.setToolTip("refine")
         self.PB_Refine.setText("Refine")
         self.PB_Refine.setObjectName("PB_Refine")
         self.PB_RefineParametric = QtGui.QPushButton(self.dockWidgetContents)
-        self.PB_RefineParametric.setGeometry(QtCore.QRect(276, 360, 81, 28))
+        self.PB_RefineParametric.setGeometry(QtCore.QRect(276, 396, 81, 28))
         self.PB_RefineParametric.setToolTip("parametric Refine")
         self.PB_RefineParametric.setText("prm Refine")
         self.PB_RefineParametric.setObjectName("PB_RefineParametric")
@@ -1188,6 +1167,11 @@ class Ui_DockWidget(object):
         self.PB_right.setToolTip("dock right")
         self.PB_right.setText("")
         self.PB_right.setObjectName("PB_right")
+        self.PB_makeEdge = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_makeEdge.setGeometry(QtCore.QRect(276, 360, 81, 28))
+        self.PB_makeEdge.setToolTip("make Edge from selected Vertexes")
+        self.PB_makeEdge.setText("mk Edge")
+        self.PB_makeEdge.setObjectName("PB_makeEdge")
         DockWidget.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(DockWidget)
@@ -1217,6 +1201,8 @@ class Ui_DockWidget(object):
         self.PB_TEdge.clicked.connect(offsetEdges_RH)
         self.offset_input.setText("1.0:n")
         self.offset_input.setToolTip("offset in mm\n separator ':'\ndirection [n=normal, x,y,z]")
+        self.PB_makeEdge.clicked.connect(makeEdge_RH)
+        
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(closeW_b64))
         self.PB_close.setGeometry(QtCore.QRect(-1, -1, 20, 20))
@@ -1241,18 +1227,7 @@ class Ui_DockWidget(object):
         self.PB_right.setIconSize(QtCore.QSize(16,16))
         self.PB_right.setIcon(QtGui.QIcon(pm))
         self.PB_right.clicked.connect(dock_right_RH)
-        
-        
-        #self.setupUi(self)
-        
-        #print("end init")   
-        #pm = QtGui.QPixmap()
-        #pm.loadFromData(base64.b64decode(remove_holes_b64))
-        #self.close.setIconSize(QtCore.QSize(32,32))
-        #self.close.setIcon(QtGui.QIcon(pm))
-        #def closeEvent(self, DockWidget):        
-        ##def closeEvent(self):
-        #    print("User has clicked the red x on the main window")    
+   
 ################################################################################################
     def retranslateUi(self, DockWidget):
         pass
