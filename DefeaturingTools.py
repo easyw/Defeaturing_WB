@@ -877,7 +877,7 @@ def makeEdge_RH():
             ce = Part.makeLine(verts[0].Point, verts[1].Point)
             Part.show(ce)
             del ce
-            doc.ActiveObject.Label = "Face"
+            doc.ActiveObject.Label = "Edge"
         except:
             i_sayerr("failed to create a Line")
     else:
