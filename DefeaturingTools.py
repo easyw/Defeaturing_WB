@@ -21,7 +21,6 @@ import FreeCAD, FreeCADGui, Draft, Part
 import re, os, sys
 import OpenSCADCommands, OpenSCAD2Dgeom, OpenSCADFeatures
 from PySide import QtCore, QtGui
-from PySide.QtUiTools import QUiLoader
 
 #int(re.search(r'\d+', string1).group())
 
