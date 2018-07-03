@@ -21,6 +21,7 @@ import FreeCAD, FreeCADGui, Draft, Part
 import re, os, sys
 import OpenSCADCommands, OpenSCAD2Dgeom, OpenSCADFeatures
 from PySide import QtCore, QtGui
+import tempfile
 
 #int(re.search(r'\d+', string1).group())
 
@@ -961,6 +962,32 @@ def showFaces_RH():
 
 ##
 
+def makeSolidExpSTEP_RH():
+    
+    doc=FreeCAD.ActiveDocument
+    docG = FreeCADGui.ActiveDocument
+    if doc is not None:
+        fname = doc.FileName
+        if len(fname) == 0:
+            fname='untitled'
+        tempdir = tempfile.gettempdir() # get the current temporary directory
+        tempfilepath = os.path.join(tempdir,fname + u'.stp')
+        sel=FreeCADGui.Selection.getSelection()
+        if len (sel) == 1:
+            __objs__=[]
+            __objs__.append(sel[0])
+            import ImportGui
+            ImportGui.export(__objs__,tempfilepath)
+            del __objs__
+            docG.getObject(sel[0].Name).Visibility = False
+            ImportGui.insert(tempfilepath,doc.Name)
+            FreeCADGui.SendMsgToActiveView("ViewFit")
+        else:
+            i_sayerr('select only one object')
+    else:
+        i_sayerr('select only one object')
+##    
+
 ############################################################################################
 # embedded button images
 import base64
@@ -982,7 +1009,7 @@ PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0g
 class Ui_DockWidget(object):
     def setupUi(self, DockWidget):
         DockWidget.setObjectName("DockWidget")
-        DockWidget.resize(367, 449)
+        DockWidget.resize(367, 483)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("icons-new/Center-Align.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         DockWidget.setWindowIcon(icon)
@@ -1084,7 +1111,7 @@ class Ui_DockWidget(object):
         self.PB_makeShell_2.setText("mk Solid 2")
         self.PB_makeShell_2.setObjectName("PB_makeShell_2")
         self.PB_check_TypeId = QtGui.QPushButton(self.dockWidgetContents)
-        self.PB_check_TypeId.setGeometry(QtCore.QRect(188, 360, 81, 28))
+        self.PB_check_TypeId.setGeometry(QtCore.QRect(144, 432, 81, 28))
         font = QtGui.QFont()
         font.setWeight(50)
         font.setItalic(False)
@@ -1171,6 +1198,12 @@ class Ui_DockWidget(object):
         self.PB_makeEdge.setToolTip("make Edge from selected Vertexes")
         self.PB_makeEdge.setText("mk Edge")
         self.PB_makeEdge.setObjectName("PB_makeEdge")
+        self.PB_expSTEP = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_expSTEP.setGeometry(QtCore.QRect(188, 360, 81, 28))
+        self.PB_expSTEP.setToolTip("make Solid from the Faces\n"
+"of the selected Objects")
+        self.PB_expSTEP.setText("mk Solid 3")
+        self.PB_expSTEP.setObjectName("PB_expSTEP")
         DockWidget.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(DockWidget)
@@ -1201,6 +1234,10 @@ class Ui_DockWidget(object):
         self.offset_input.setText("1.0:n")
         self.offset_input.setToolTip("offset in mm\n separator ':'\ndirection [n=normal, x,y,z]")
         self.PB_makeEdge.clicked.connect(makeEdge_RH)
+        self.PB_expSTEP.clicked.connect(makeSolidExpSTEP_RH)
+        self.PB_expSTEP.setToolTip("select ONE object to try to make a Solid\nthrough STEP import/export process")
+        self.TE_Edges.setReadOnly(True)
+        self.TE_Faces.setReadOnly(True)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(closeW_b64))

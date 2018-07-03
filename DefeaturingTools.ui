@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>367</width>
-    <height>449</height>
+    <height>483</height>
    </rect>
   </property>
   <property name="windowIcon">
@@ -313,8 +313,8 @@ of the selected Objects</string>
    <widget class="QPushButton" name="PB_check_TypeId">
     <property name="geometry">
      <rect>
-      <x>188</x>
-      <y>360</y>
+      <x>144</x>
+      <y>432</y>
       <width>81</width>
       <height>28</height>
      </rect>
@@ -579,6 +579,23 @@ of the selected Objects</string>
     </property>
     <property name="text">
      <string notr="true">mk Edge</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_expSTEP">
+    <property name="geometry">
+     <rect>
+      <x>188</x>
+      <y>360</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">make Solid from the Faces
+of the selected Objects</string>
+    </property>
+    <property name="text">
+     <string notr="true">mk Solid 3</string>
     </property>
    </widget>
   </widget>
