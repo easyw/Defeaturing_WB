@@ -605,7 +605,8 @@ def removeHoles_RH():
                 obj.touch()
         doc.recompute() 
         print('ToDo Apply colors to corresponding faces') 
-
+    else:
+        i_sayerr('select only one object')
 ##
 
 ##
