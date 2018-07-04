@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.1.1"
+__version__ = "v1.1.2"
 
 invert = False #True
 rh_edges = []
@@ -406,8 +406,19 @@ def edges_confirmed_RH():
                             #    docG.ActiveObject.Visibility=False
                             #except:
                             rh_edges_to_connect.append(e)
-            print(re.search(r'\d+', selEdge.SubElementNames[i]).group())
-        print(selEdge.ObjectName)
+            i_say(re.search(r'\d+', selEdge.SubElementNames[i]).group())
+        i_say(selEdge.ObjectName)
+        try:
+            #cf=Part.makeFilledFace(Part.Wire(Part.__sortEdges__(rh_edges_to_connect)))
+            cf=Part.Face(Part.Wire(Part.__sortEdges__(rh_edges_to_connect)))
+            created_faces.append(cf)
+            if RHDockWidget.ui.checkBox_keep_faces.isChecked():
+                Part.show(cf)
+                doc.ActiveObject.Label = 'Face'
+                docG.ActiveObject.Visibility=False
+            rh_edges_to_connect = []
+        except:
+            i_sayerr("make Face failed")
         #rh_obj_name.append(selx.ObjectName)
         #rh_obj.append(selx.Object)
         #for e in rh_edges: # selx.SubObjects:
