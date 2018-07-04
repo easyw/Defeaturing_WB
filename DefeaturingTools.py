@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.1.2"
+__version__ = "v1.1.3"
 
 invert = False #True
 rh_edges = []
@@ -385,6 +385,7 @@ def edges_confirmed_RH():
                         if (e.isClosed()):
                             cf=(Part.Face(Part.Wire(e)))
                             created_faces.append(cf)
+                            i_say('face created from closed edge')
                             if RHDockWidget.ui.checkBox_keep_faces.isChecked():
                                 # _ = Part.Solid(Part.Shell([cf]))
                                 # doc.addObject('Part::Feature','Face_Solid').Shape = _
@@ -408,17 +409,19 @@ def edges_confirmed_RH():
                             rh_edges_to_connect.append(e)
             i_say(re.search(r'\d+', selEdge.SubElementNames[i]).group())
         i_say(selEdge.ObjectName)
-        try:
-            #cf=Part.makeFilledFace(Part.Wire(Part.__sortEdges__(rh_edges_to_connect)))
-            cf=Part.Face(Part.Wire(Part.__sortEdges__(rh_edges_to_connect)))
-            created_faces.append(cf)
-            if RHDockWidget.ui.checkBox_keep_faces.isChecked():
-                Part.show(cf)
-                doc.ActiveObject.Label = 'Face'
-                docG.ActiveObject.Visibility=False
-            rh_edges_to_connect = []
-        except:
-            i_sayerr("make Face failed")
+        if len (rh_edges_to_connect) >0:
+            try:
+                #cf=Part.makeFilledFace(Part.Wire(Part.__sortEdges__(rh_edges_to_connect)))
+                cf=Part.Face(Part.Wire(Part.__sortEdges__(rh_edges_to_connect)))
+                created_faces.append(cf)
+                i_say('face created from open edges')
+                if RHDockWidget.ui.checkBox_keep_faces.isChecked():
+                    Part.show(cf)
+                    doc.ActiveObject.Label = 'Face'
+                    docG.ActiveObject.Visibility=False
+                rh_edges_to_connect = []
+            except:
+                i_sayerr("make Face failed")
         #rh_obj_name.append(selx.ObjectName)
         #rh_obj.append(selx.Object)
         #for e in rh_edges: # selx.SubObjects:
@@ -545,7 +548,7 @@ def removeHoles_RH():
             if not invert:
                 try:
                     print("try to create a Face w/ OpenSCAD2Dgeom")
-                    cf = OpenSCAD2Dgeom.edgestofaces(rh_edges_to_connect)
+                    cf = OpenSCAD2Dgeom.edgestofaces(Part.__sortEdges__(rh_edges_to_connect))
                 except:
                     print("OpenSCAD2Dgeom failed\ntry to makeFilledFace")
                     cf=Part.makeFilledFace(Part.__sortEdges__(rh_edges_to_connect))
@@ -555,7 +558,7 @@ def removeHoles_RH():
                     cf=Part.makeFilledFace(Part.__sortEdges__(rh_edges_to_connect))
                 except:
                     print("makeFilledFace failed\ntry to create a Face w/ OpenSCAD2Dgeom")
-                    cf = OpenSCAD2Dgeom.edgestofaces(rh_edges_to_connect)
+                    cf = OpenSCAD2Dgeom.edgestofaces(Part.__sortEdges__(rh_edges_to_connect))
             created_faces.append(cf)
             if RHDockWidget.ui.checkBox_keep_faces.isChecked():
                 #_ = Part.Solid(Part.Shell([cf]))
@@ -565,29 +568,68 @@ def removeHoles_RH():
                 doc.ActiveObject.Label = 'Face'
                 docG.ActiveObject.Visibility=False
             rh_edges_to_connect = []
-        for f in created_faces:
-            faces.append(f)
-        res_faces = []
+        if 0:
+            for f in created_faces:
+                faces.append(f)
+            res_faces = []
+            _ = Part.Shell(faces)
+            if _.isNull(): raise RuntimeError('Failed to create shell')
         _ = Part.Shell(faces)
         if _.isNull(): raise RuntimeError('Failed to create shell')
-        #App.ActiveDocument.addObject('Part::Feature','Shell').Shape=_
-        if RHDockWidget.ui.checkBox_Refine.isChecked():
-            try:
-                _.removeSplitter()
-            except:
-                print ('not refined')
-        #myshell = doc.ActiveObject
-        #del _
-            
-        #if myshell.Shape.ShapeType != 'Shell': raise RuntimeError('Part object is not a shell')
-        if _.ShapeType != 'Shell': raise RuntimeError('Part object is not a shell')
         _=Part.Solid(_)
         if _.isNull(): raise RuntimeError('Failed to create solid')
         if RHDockWidget.ui.checkBox_Refine.isChecked():
             try:
                 _.removeSplitter()
             except:
-                print ('not refined')
+                print ('not refined')    
+        for f in created_faces:
+            new_faces = []
+            for nf in _.Faces:
+                new_faces.append(nf)
+            new_faces.append(f)
+            del _
+            _ = Part.Shell(new_faces)
+            i_sayw('added 1 face')
+            if _.isNull(): raise RuntimeError('Failed to create shell')
+            if RHDockWidget.ui.checkBox_Refine.isChecked():
+                try:
+                    _.removeSplitter()
+                except:
+                    print ('not refined')
+            if _.ShapeType != 'Shell': raise RuntimeError('Part object is not a shell')
+            _=Part.Solid(_)
+            if _.isNull(): raise RuntimeError('Failed to create solid')
+            if RHDockWidget.ui.checkBox_Refine.isChecked():
+                try:
+                    _.removeSplitter()
+                except:
+                    print ('not refined')
+            #doc.recompute()
+        #for f in created_faces:
+        #    new_faces.append(f)
+        #del _
+        #_ = Part.Shell(new_faces)
+        #if _.isNull(): raise RuntimeError('Failed to create shell')
+        
+        #App.ActiveDocument.addObject('Part::Feature','Shell').Shape=_
+        #if RHDockWidget.ui.checkBox_Refine.isChecked():
+        #    try:
+        #        _.removeSplitter()
+        #    except:
+        #        print ('not refined')
+        #myshell = doc.ActiveObject
+        #del _
+            
+        #if myshell.Shape.ShapeType != 'Shell': raise RuntimeError('Part object is not a shell')
+        # if _.ShapeType != 'Shell': raise RuntimeError('Part object is not a shell')
+        # _=Part.Solid(_)
+        # if _.isNull(): raise RuntimeError('Failed to create solid')
+        # if RHDockWidget.ui.checkBox_Refine.isChecked():
+        #     try:
+        #         _.removeSplitter()
+        #     except:
+        #         print ('not refined')
         #App.ActiveDocument.addObject('Part::Feature','Solid').Shape=_
         #mysolid = doc.ActiveObject
         #del _
@@ -600,6 +642,7 @@ def removeHoles_RH():
             doc.addObject('Part::Feature','SolidRefined').Shape=_.removeSplitter()
         else:
             doc.addObject('Part::Feature','Solid').Shape=_
+        #    doc.addObject('Part::Feature','Solid').Shape=_
         #App.ActiveDocument.ActiveObject.Label=App.ActiveDocument.mysolid.Label
         mysolidr = doc.ActiveObject
         original_label = myshape.Label
