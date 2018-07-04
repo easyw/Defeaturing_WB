@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.1.3"
+__version__ = "v1.1.4"
 
 invert = False #True
 rh_edges = []
@@ -1017,6 +1017,30 @@ def showFaces_RH():
 
 ##
 
+def PartDefeaturing_RH():
+    #pass
+    global rh_edges, rh_faces, rh_obj
+    global rh_edges_names, rh_faces_names, rh_obj_name
+    global created_faces, rh_faces_indexes, rh_edges_to_connect
+    global force_recompute
+    doc=FreeCAD.ActiveDocument
+    docG = FreeCADGui.ActiveDocument
+    
+    unique_obj = set(rh_obj)
+    unique_obj_count = len(unique_obj)
+    if unique_obj_count == 1 and len(rh_faces) >0: #ToDo manage multi objs faces selection
+        sh = rh_obj[0].Shape
+        #nsh = sh.defeaturing([sh.Face5,])
+        i_say(rh_faces)
+        nsh = sh.defeaturing(rh_faces)
+        if not sh.isPartner(nsh):
+                defeat = doc.addObject('Part::Feature','Defeatured').Shape = nsh
+                docG.getObject(rh_obj[0].Name).hide()
+        else:
+                FreeCAD.Console.PrintError('Defeaturing failed\n')
+    doc.recompute()
+##
+
 def makeSolidExpSTEP_RH():
     
     doc=FreeCAD.ActiveDocument
@@ -1166,7 +1190,7 @@ class Ui_DockWidget(object):
         self.PB_makeShell_2.setText("mk Solid 2")
         self.PB_makeShell_2.setObjectName("PB_makeShell_2")
         self.PB_check_TypeId = QtGui.QPushButton(self.dockWidgetContents)
-        self.PB_check_TypeId.setGeometry(QtCore.QRect(144, 432, 81, 28))
+        self.PB_check_TypeId.setGeometry(QtCore.QRect(188, 432, 81, 28))
         font = QtGui.QFont()
         font.setWeight(50)
         font.setItalic(False)
@@ -1259,6 +1283,12 @@ class Ui_DockWidget(object):
 "of the selected Objects")
         self.PB_expSTEP.setText("mk Solid 3")
         self.PB_expSTEP.setObjectName("PB_expSTEP")
+        self.PB_PartDefeaturing = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_PartDefeaturing.setEnabled(False)
+        self.PB_PartDefeaturing.setGeometry(QtCore.QRect(12, 432, 81, 28))
+        self.PB_PartDefeaturing.setToolTip("show \'in List\' Edge(s)")
+        self.PB_PartDefeaturing.setText("Defeat")
+        self.PB_PartDefeaturing.setObjectName("PB_PartDefeaturing")
         DockWidget.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(DockWidget)
@@ -1293,6 +1323,8 @@ class Ui_DockWidget(object):
         self.PB_expSTEP.setToolTip("select ONE object to try to make a Solid\nthrough STEP import/export process")
         self.TE_Edges.setReadOnly(True)
         self.TE_Faces.setReadOnly(True)
+        self.PB_PartDefeaturing.clicked.connect(PartDefeaturing_RH)
+        self.PB_PartDefeaturing.setVisible(False)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(closeW_b64))
@@ -1424,6 +1456,14 @@ if RH_singleInstance():
     RHmw.addDockWidget(QtCore.Qt.RightDockWidgetArea,RHDockWidget)
     RHDockWidget.setFloating(True)  #undock
     RHDockWidget.ui.Version.setText(__version__)
+    
+    if hasattr(Part, "OCC_VERSION"):
+        OCCMV = Part.OCC_VERSION.split('.')[0]
+        OCCmV = Part.OCC_VERSION.split('.')[1]
+        if (int(OCCMV)>= 7) and (int(OCCmV)>= 3):
+            RHDockWidget.ui.PB_PartDefeaturing.setVisible(True)
+            RHDockWidget.ui.PB_PartDefeaturing.setEnabled(True)
+    
     # print (instance_nbr)
     # if instance_nbr >1:
     #     RH_killInstance()

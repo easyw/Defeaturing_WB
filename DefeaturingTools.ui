@@ -313,7 +313,7 @@ of the selected Objects</string>
    <widget class="QPushButton" name="PB_check_TypeId">
     <property name="geometry">
      <rect>
-      <x>144</x>
+      <x>188</x>
       <y>432</y>
       <width>81</width>
       <height>28</height>
@@ -596,6 +596,25 @@ of the selected Objects</string>
     </property>
     <property name="text">
      <string notr="true">mk Solid 3</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_PartDefeaturing">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>432</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">show 'in List' Edge(s)</string>
+    </property>
+    <property name="text">
+     <string notr="true">Defeat</string>
     </property>
    </widget>
   </widget>
