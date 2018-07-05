@@ -30,9 +30,9 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.1.4"
+__version__ = "v1.1.5"
 
-invert = False #True
+invert = True
 rh_edges = []
 rh_edges_names = []
 rh_edges_to_connect = []
@@ -407,7 +407,7 @@ def edges_confirmed_RH():
                             #    docG.ActiveObject.Visibility=False
                             #except:
                             rh_edges_to_connect.append(e)
-            i_say(re.search(r'\d+', selEdge.SubElementNames[i]).group())
+                #i_say(re.search(r'\d+', selEdge.SubElementNames[i]).group())
         i_say(selEdge.ObjectName)
         if len (rh_edges_to_connect) >0:
             try:
@@ -701,9 +701,10 @@ def removeFaces_RH():
                     FreeCAD.Console.PrintWarning('Failed to create shell\n')
             except:
                 FreeCAD.Console.PrintWarning('Failed to create shell\n')
-                for f in faces:
-                    Part.show(f)
-                    doc.ActiveObject.Label="face"
+                if RHDockWidget.ui.checkBox_keep_faces.isChecked():
+                    for f in faces:
+                        Part.show(f)
+                        doc.ActiveObject.Label="face"
                 stop
             #App.ActiveDocument.addObject('Part::Feature','Shell').Shape=_
             if RHDockWidget.ui.checkBox_Refine.isChecked():
@@ -755,10 +756,10 @@ def removeFaces_RH():
         #ui.TE_Edges.setPlainText("")
         #ui.TE_Faces.setPlainText("")
         clear_all_RH()
-    if force_recompute:
-        for obj in FreeCAD.ActiveDocument.Objects:
-            obj.touch()
-    doc.recompute() 
+        if force_recompute:
+            for obj in FreeCAD.ActiveDocument.Objects:
+                obj.touch()
+        doc.recompute() 
     print('ToDo Apply colors to corresponding faces') 
 
 ##
@@ -1038,7 +1039,7 @@ def PartDefeaturing_RH():
                 docG.getObject(rh_obj[0].Name).hide()
         else:
                 FreeCAD.Console.PrintError('Defeaturing failed\n')
-    doc.recompute()
+        doc.recompute()
 ##
 
 def makeSolidExpSTEP_RH():
