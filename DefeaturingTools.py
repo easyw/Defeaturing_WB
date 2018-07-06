@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.1.5"
+__version__ = "v1.1.6"
 
 invert = True
 rh_edges = []
@@ -478,7 +478,6 @@ def faces_confirmed_RH():
     doc=FreeCAD.ActiveDocument
     #rh_faces = []; rh_faces_names = []
     selEx=FreeCADGui.Selection.getSelectionEx()
-    selEx=FreeCADGui.Selection.getSelectionEx()
     #fn = None
     if len (selEx):
         for selFace in selEx:
@@ -911,7 +910,231 @@ def copyFaces_RH():
     if len(rh_faces) > 0:
         clear_all_RH()
 ##
+def removesubtree(objs):
+    def addsubobjs(obj,toremoveset):
+        toremove.add(obj)
+        for subobj in obj.OutList:
+            addsubobjs(subobj,toremoveset)
 
+    import FreeCAD
+    toremove=set()
+    for obj in objs:
+        addsubobjs(obj,toremove)
+    checkinlistcomplete =False
+    while not checkinlistcomplete:
+        for obj in toremove:
+            if (obj not in objs) and (frozenset(obj.InList) - toremove):
+                toremove.remove(obj)
+                break
+        else:
+            checkinlistcomplete = True
+    for obj in toremove:
+        try:
+            obj.Document.removeObject(obj.Name)
+        except:
+            pass
+
+###
+
+def cleaningFaces_RH():
+    """merge two faces"""
+    global force_recompute, invert
+    
+    i_sayw('merging faces')
+    doc=FreeCAD.ActiveDocument
+    docG = FreeCADGui.ActiveDocument
+    selEx=FreeCADGui.Selection.getSelectionEx()
+    fcs=[];fcs_names=[];fcs_outW=[];fcs_indexes=[]
+    new_faces=[]
+    #i_say(selEx)
+    if len (selEx)>0:
+        for selobj in selEx:
+            for i,f in enumerate(selobj.SubObjects):
+            #for e in selEdge.SubObjects
+                if 'Face' in selobj.SubElementNames[i]:
+                    fcs.append(f)
+                    fcs_names.append(selobj.SubElementNames[i])
+                    fcs_indexes.append (re.search(r'\d+',selobj.SubElementNames[i]).group())
+                    fcs_outW.append(f.OuterWire)
+                    #fcs_outW_names.append(f.OuterWire)
+                    print(selobj.SubElementNames[i])
+        if len(fcs)>1:
+            sps=[]
+            for w in fcs_outW:
+                s=w.copy();Part.show(s);sps.append(doc.ActiveObject)
+            doc.addObject("Part::MultiFuse","Wfuse")
+            wf=doc.ActiveObject
+            wf.Shapes = sps
+            doc.addObject("Part::MultiCommon","Wcommon")
+            wc=doc.ActiveObject
+            wc.Shapes = sps
+            doc.addObject("Part::Cut","Wcut")
+            wct=doc.ActiveObject
+            wct.Base = wf
+            wct.Tool = wc
+            doc.recompute()
+            i_say('outer wire created')
+            print wct.Shape.Edges
+            # i_say('merging 2 faces')
+            # #union_w = Part.Shape(fcs_outW[0].Edges)
+            # Part.show(fcs_outW[0])
+            # union_w = doc.ActiveObject
+            # for w in fcs_outW[1:]:
+            # #for w in fcs_outW:
+            #     #s=w.Edges[0]
+            #     Part.show(w)
+            #     s = doc.ActiveObject
+            #     #Part.show(s);sps.append(doc.ActiveObject)
+            #     #sps.append(s)
+            #     #union_w=union_w.union(s)
+            #     union_w.Shape=union_w.Shape.multiFuse(s.Shape)
+            # Part.show(union_w)
+            # #sps.append()
+            # #print sps
+            # #doc.addObject("Part::MultiFuse","Wfuse")
+            # #wf=doc.ActiveObject
+            # #wf.Shapes = sps
+            # common_w = fcs_outW[0].copy().common(fcs_outW[1].copy())
+            # 
+            # #doc.addObject("Part::MultiCommon","Wcommon")
+            # #wc=doc.ActiveObject
+            # #wc.Shapes = sps
+            # #doc.addObject("Part::Cut","Wcut")
+            # #wct=doc.ActiveObject
+            # #wct.Base = wf
+            # #wct.Tool = wc
+            # cut_w = union_w.cut(common_w)
+            # doc.recompute()
+            # i_say('outer wire created')
+            # #print wct.Shape.Edges
+            # #try:
+            # #    cf=Part.makeFilledFace(Part.__sortEdges__(wct.Shape.Edges))
+            # #except:
+            # #    cf=Part.makeFace(Part.__sortEdges__(wct.Shape.Edges))
+            if not invert:
+                try:
+                    print("try to create a Face w/ OpenSCAD2Dgeom")
+                    cf = OpenSCAD2Dgeom.edgestofaces((wct.Shape.Edges))
+                except:
+                    print("OpenSCAD2Dgeom failed\ntry to makeFilledFace")
+                    cf=Part.makeFilledFace(Part.__sortEdges__(wct.Shape.Edges))
+            else:
+                try:
+                    print("try to makeFilledFace")
+                    cf=Part.makeFilledFace(Part.__sortEdges__(wct.Shape.Edges))
+                except:
+                    print("makeFilledFace failed\ntry to create a Face w/ OpenSCAD2Dgeom")
+                    cf = OpenSCAD2Dgeom.edgestofaces((wct.Shape.Edges))
+            #created_faces.append(cf)
+            w = cf.Faces[0].OuterWire
+            removesubtree([wct])
+            if not invert:
+                try:
+                    print("try to create a Face w/ OpenSCAD2Dgeom")
+                    cf2 = OpenSCAD2Dgeom.edgestofaces((w.Edges))
+                except:
+                    print("OpenSCAD2Dgeom failed\ntry to makeFilledFace")
+                    cf2=Part.makeFilledFace(Part.__sortEdges__(w.Edges))
+            else:
+                try:
+                    print("try to makeFilledFace")
+                    cf2=Part.makeFilledFace(Part.__sortEdges__(w.Edges))
+                except:
+                    print("makeFilledFace failed\ntry to create a Face w/ OpenSCAD2Dgeom")
+                    cf2 = OpenSCAD2Dgeom.edgestofaces((w.Edges))
+            #cf2 = OpenSCAD2Dgeom.edgestofaces((w.Edges))
+            Part.show(cf2)
+            new_faces.append(doc.ActiveObject)
+        elif len(fcs)==1:
+            w = fcs[0].OuterWire
+            s=w.copy();Part.show(s);sw=(doc.ActiveObject)
+            doc.addObject("Part::Face", "Face").Sources = (sw, )
+            doc.recompute()
+            o=doc.ActiveObject
+            doc.addObject('Part::Feature','face').Shape=o.Shape
+            new_faces.append(doc.ActiveObject)
+            removesubtree([o])
+            # stop
+            # if not invert:
+            #     try:
+            #         print("try to create a Face w/ OpenSCAD2Dgeom")
+            #         cf2 = OpenSCAD2Dgeom.edgestofaces((sw.Shape.Edges))
+            #     except:
+            #         print("OpenSCAD2Dgeom failed\ntry to makeFilledFace")
+            #         cf2=Part.makeFilledFace(Part.__sortEdges__(sw.Shape.Edges))
+            # else:
+            #     try:
+            #         print("try to makeFilledFace")
+            #         cf2=Part.makeFilledFace(Part.__sortEdges__(sw.Shape.Edges))
+            #     except:
+            #         print("makeFilledFace failed\ntry to create a Face w/ OpenSCAD2Dgeom")
+            #         cf2 = OpenSCAD2Dgeom.edgestofaces((sw.Shape.Edges))
+        else:
+            print('Error')
+        doc.ActiveObject.Label = "Face"       
+        doc.recompute()
+        if len(selEx) == 1:
+            myshape=selEx[0].Object
+            i = 0
+            faces = []
+            for f in myshape.Shape.Faces:
+                i+=1
+                idx_found = False
+                for j in fcs_indexes:
+                    if int(j) == i:
+                        idx_found = True
+                        print('index found '+str(j))
+                if not idx_found:
+                    faces.append(f)
+            try:
+                _ = Part.Shell(faces)
+                if _.isNull():
+                #raise RuntimeError('Failed to create shell')
+                    FreeCAD.Console.PrintWarning('Failed to create shell\n')
+            except:
+                FreeCAD.Console.PrintWarning('Failed to create shell\n')
+                if RHDockWidget.ui.checkBox_keep_faces.isChecked():
+                    for f in faces:
+                        Part.show(f)
+                        doc.ActiveObject.Label="face"
+                stop
+            #App.ActiveDocument.addObject('Part::Feature','Shell').Shape=_
+            if RHDockWidget.ui.checkBox_Refine.isChecked():
+                try:
+                    _.removeSplitter()
+                except:
+                    print ('not refined')
+            if _.ShapeType != 'Shell': raise RuntimeError('Part object is not a shell')
+            _=Part.Solid(_)
+            if _.isNull(): raise RuntimeError('Failed to create solid')
+            if RHDockWidget.ui.checkBox_Refine.isChecked():
+                try:
+                    _.removeSplitter()
+                except:
+                    print ('not refined')
+            if RHDockWidget.ui.checkBox_Refine.isChecked():
+                doc.addObject('Part::Feature','SolidRefined').Shape=_.removeSplitter()
+            else:
+                doc.addObject('Part::Feature','Solid').Shape=_
+            mysolidr = doc.ActiveObject
+            original_label = myshape.Label
+            if RHDockWidget.ui.checkBox_keep_original.isChecked():
+                docG.getObject(myshape.Name).Visibility=False
+            else:
+                doc.removeObject(myshape.Name)
+            if RHDockWidget.ui.checkBox_Refine.isChecked():
+                mysolidr.Label = original_label # + "_refined"
+            FreeCADGui.Selection.addSelection(mysolidr)
+            for fn in new_faces:
+                FreeCADGui.Selection.addSelection(fn)
+        FreeCADGui.Selection.removeSelection(myshape)
+        merge_faces_from_selected_objects_RH()
+        #for w in fcs_outW:
+        #    s=w.copy();Part.show(s)
+        
+        #App.activeDocument().addObject("Part::MultiFuse","Fusion002")
+        #App.activeDocument().Fusion002.Shapes = [App.activeDocument().Shape006,App.activeDocument().Shape007]
+##
 def makeEdge_RH():
     global force_recompute
     doc=FreeCAD.ActiveDocument
@@ -1089,7 +1312,7 @@ PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0g
 class Ui_DockWidget(object):
     def setupUi(self, DockWidget):
         DockWidget.setObjectName("DockWidget")
-        DockWidget.resize(367, 483)
+        DockWidget.resize(367, 494)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("icons-new/Center-Align.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         DockWidget.setWindowIcon(icon)
@@ -1274,7 +1497,7 @@ class Ui_DockWidget(object):
         self.PB_right.setText("")
         self.PB_right.setObjectName("PB_right")
         self.PB_makeEdge = QtGui.QPushButton(self.dockWidgetContents)
-        self.PB_makeEdge.setGeometry(QtCore.QRect(276, 360, 81, 28))
+        self.PB_makeEdge.setGeometry(QtCore.QRect(12, 432, 81, 28))
         self.PB_makeEdge.setToolTip("make Edge from selected Vertexes")
         self.PB_makeEdge.setText("mk Edge")
         self.PB_makeEdge.setObjectName("PB_makeEdge")
@@ -1286,10 +1509,16 @@ class Ui_DockWidget(object):
         self.PB_expSTEP.setObjectName("PB_expSTEP")
         self.PB_PartDefeaturing = QtGui.QPushButton(self.dockWidgetContents)
         self.PB_PartDefeaturing.setEnabled(False)
-        self.PB_PartDefeaturing.setGeometry(QtCore.QRect(12, 432, 81, 28))
+        self.PB_PartDefeaturing.setGeometry(QtCore.QRect(100, 432, 81, 28))
         self.PB_PartDefeaturing.setToolTip("show \'in List\' Edge(s)")
         self.PB_PartDefeaturing.setText("Defeat")
         self.PB_PartDefeaturing.setObjectName("PB_PartDefeaturing")
+        self.PB_CleaningFaces = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_CleaningFaces.setGeometry(QtCore.QRect(276, 360, 81, 28))
+        self.PB_CleaningFaces.setToolTip("clean Face(s) removing\n"
+"holes and merging Outwire")
+        self.PB_CleaningFaces.setText("clean Faces")
+        self.PB_CleaningFaces.setObjectName("PB_CleaningFaces")
         DockWidget.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(DockWidget)
@@ -1326,6 +1555,7 @@ class Ui_DockWidget(object):
         self.TE_Faces.setReadOnly(True)
         self.PB_PartDefeaturing.clicked.connect(PartDefeaturing_RH)
         self.PB_PartDefeaturing.setVisible(False)
+        self.PB_CleaningFaces.clicked.connect(cleaningFaces_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(closeW_b64))
