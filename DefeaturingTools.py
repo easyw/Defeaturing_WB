@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.1.8"
+__version__ = "v1.1.9"
 
 invert = True
 rh_edges = []
@@ -85,9 +85,10 @@ def check_TypeId_RH():
             for o in sel:
                 if hasattr(o,"Shape"):
                     if '.[compsolid]' in o.Label or '.[solid]' in o.Label or '.[shell]' in o.Label\
-                            or '.[compound]' in o.Label or '.[face]' in o.Label or '.[edge]' in o.Label or '.[wire]' in o.Label:
+                            or '.[compound]' in o.Label or '.[face]' in o.Label or '.[edge]' in o.Label or '.[wire]' in o.Label\
+                            or '.[vertex]' in o.Label:
                         o.Label=mk_str(o.Label).replace('.[solid]','').replace('.[shell]','').replace('.[compsolid]','').replace('.[compound]','')\
-                                               .replace('.[face]','').replace('.[wire]','').replace('.[edge]','')
+                                               .replace('.[face]','').replace('.[wire]','').replace('.[edge]','').replace('.[vertex]','')
                     else:
                         len_shapes = len(o.Shape.Solids)+len(o.Shape.Shells)+len(o.Shape.Compounds)+len(o.Shape.CompSolids)+\
                                      len(o.Shape.Faces)+len(o.Shape.Edges)+len(o.Shape.Wires)+len(o.Shape.Vertexes)
@@ -131,7 +132,10 @@ def check_TypeId_RH():
                                 o.Label=mk_str(o.Label)+'.[edge]'
                         if len(o.Shape.Vertexes)>0:
                             i_say(mk_str(o.Label)+' Vertex object(s) NBR : '+str(len(o.Shape.Vertexes)))
-                            
+                            if '.[compsolid]' not in o.Label and '.[solid]' not in o.Label and '.[shell]' not in o.Label\
+                                and '.[compound]' not in o.Label and '.[face]' not in o.Label and '.[edge]' not in o.Label\
+                                and '.[wire]' not in o.Label and '.[vertex]' not in o.Label:
+                                o.Label=mk_str(o.Label)+'.[vertex]'
                 else:
                     FreeCAD.Console.PrintWarning("Select object with a \"Shape\" to be checked!\n")
             # if len (non_solids)>0:
