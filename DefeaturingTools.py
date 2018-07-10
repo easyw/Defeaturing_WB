@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.1.9"
+__version__ = "v1.2.0"
 
 invert = True
 rh_edges = []
@@ -94,27 +94,27 @@ def check_TypeId_RH():
                                      len(o.Shape.Faces)+len(o.Shape.Edges)+len(o.Shape.Wires)+len(o.Shape.Vertexes)
                         lbl = mk_str (o.Label)
                         i_say('\n'+lbl + '-> Shape Content: '+str(len_shapes)+' shapes -------------------------------')
+                        if len(o.Shape.CompSolids)>0:
+                            i_say(mk_str(o.Label)+' CompSolids object(s) NBR : '+str(len(o.Shape.CompSolids)))
+                            if '.[compsolid]' not in o.Label and '.[solid]' not in o.Label and '.[shell]' not in o.Label\
+                                and '.[compound]' not in o.Label and '.[face]' not in o.Label and '.[edge]' not in o.Label:
+                                o.Label=mk_str(o.Label)+'.[compsolid]'
                         if len(o.Shape.Solids)>0:
                             i_say(mk_str(o.Label)+' Solid object(s) NBR : '+str(len(o.Shape.Solids)))
                             solids+=mk_str(o.Label)+'<br>'
-                            if '.[solid]' not in o.Label:
+                            if '.[solid]' not in o.Label and '.[compsolid]' not in o.Label:
                                 o.Label=mk_str(o.Label)+'.[solid]'
                         else:
                             i_sayerr(mk_str(o.Label)+' object is a NON Solid')
                             non_solids+=mk_str(o.Label)+'<br>'
                         if len(o.Shape.Shells)>0:
                             i_say(mk_str(o.Label)+' Shell object(s) NBR : '+str(len(o.Shape.Shells)))
-                            if '.[shell]' not in o.Label and '.[solid]' not in o.Label:
+                            if '.[shell]' not in o.Label and '.[solid]' not in o.Label and '.[compsolid]' not in o.Label:
                                 o.Label=mk_str(o.Label)+'.[shell]'
                         if len(o.Shape.Compounds)>0:
                             i_say(mk_str(o.Label)+' Compound object(s) NBR : '+str(len(o.Shape.Compounds)))
                             if '.[compound]' not in o.Label and '.[solid]' not in o.Label and '.[shell]' not in o.Label:
                                 o.Label=mk_str(o.Label)+'.[compound]'
-                        if len(o.Shape.CompSolids)>0:
-                            i_say(mk_str(o.Label)+' CompSolids object(s) NBR : '+str(len(o.Shape.CompSolids)))
-                            if '.[compsolid]' not in o.Label and '.[solid]' not in o.Label and '.[shell]' not in o.Label\
-                                and '.[compound]' not in o.Label and '.[face]' not in o.Label and '.[edge]' not in o.Label:
-                                o.Label=mk_str(o.Label)+'.[compsolid]'
                         if len(o.Shape.Faces)>0:
                             i_say(mk_str(o.Label)+' Face object(s) NBR : '+str(len(o.Shape.Faces)))
                             if '.[compsolid]' not in o.Label and '.[solid]' not in o.Label and '.[shell]' not in o.Label\
