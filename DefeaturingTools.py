@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.2.1"
+__version__ = "v1.2.2"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -99,10 +99,10 @@ def checking_BOP(o):
     if hasattr(o,'Shape'):
         chks=checkBOP(o.Shape)
         if chks is not True:
-            i_sayerr('shape \''+o.Name+'\' \''+mk_string(o.Label)+'\' is INVALID!\n')
+            i_sayerr('shape \''+o.Name+'\' \''+mk_str(o.Label)+'\' is INVALID!\n')
             i_sayw(chks[0])
         else:
-            i_say('shape \''+o.Name+'\' \''+mk_string(o.Label)+'\' is valid\n')
+            i_say('shape \''+o.Name+'\' \''+mk_str(o.Label)+'\' is valid\n')
 ##
 
 def check_TypeId_RH():
@@ -350,8 +350,80 @@ def merge_selected_faces_RH():
         #if RHDockWidget.ui.checkBox_Refine.isChecked():
         #    mysolidr.Label = original_label + "_refined"
 ##
+
+def checkShape():
+    """checking Shape""" 
     
+    doc=FreeCAD.ActiveDocument
+    docG = FreeCADGui.ActiveDocument
+       
+    sel=FreeCADGui.Selection.getSelection()
+    if len (sel) == 1:
+        o = sel[0]
+        checking_BOP(o)
+    else:
+        msg="Select one or more object(s) to be checked!\n"
+        reply = QtGui.QMessageBox.information(None,"Warning", msg)
+        FreeCAD.Console.PrintWarning(msg)             
+
+def sewShape():
+    """checking Shape""" 
     
+    doc=FreeCAD.ActiveDocument
+    docG = FreeCADGui.ActiveDocument
+       
+    sel=FreeCADGui.Selection.getSelection()
+    if len (sel) == 1:
+        o = sel[0]
+        if hasattr(o,'Shape'):
+            sh = o.Shape.copy()
+            sh.sewShape()
+            Part.show(sh)
+    else:
+        msg="Select one or more object(s) to be checked!\n"
+        reply = QtGui.QMessageBox.information(None,"Warning", msg)
+        FreeCAD.Console.PrintWarning(msg)             
+
+def getTolerance():
+    """getting Tolerance""" 
+    
+    doc=FreeCAD.ActiveDocument
+    docG = FreeCADGui.ActiveDocument
+       
+    sel=FreeCADGui.Selection.getSelection()
+    if len (sel) == 1:
+        o = sel[0]
+        if hasattr(o,'Shape'):
+            tol = o.Shape.getTolerance(0)
+            i_say(str(tol))
+    else:
+        msg="Select one or more object(s) to be checked!\n"
+        reply = QtGui.QMessageBox.information(None,"Warning", msg)
+        FreeCAD.Console.PrintWarning(msg)             
+##
+def setTolerance():
+    """getting Tolerance""" 
+    
+    doc=FreeCAD.ActiveDocument
+    docG = FreeCADGui.ActiveDocument
+       
+    sel=FreeCADGui.Selection.getSelection()
+    if len (sel) == 1:
+        o = sel[0]
+        if hasattr(o,'Shape'):
+            ns = o.Shape.copy()
+            i_say (str(ns.getTolerance(0)))
+            new_tol = float(RHDockWidget.ui.tolerance_value.text())
+            ns.fixTolerance(new_tol) #1e-4)
+            Part.show(ns)
+            ao = FreeCAD.ActiveDocument.ActiveObject
+            i_say (str(ao.Shape.getTolerance(0)))
+    else:
+        msg="Select one or more object(s) to be checked!\n"
+        reply = QtGui.QMessageBox.information(None,"Warning", msg)
+        FreeCAD.Console.PrintWarning(msg)           
+    
+##
 def merge_faces_from_selected_objects_RH():
     """merging Faces of selected shapes""" 
     
@@ -1363,7 +1435,7 @@ PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0g
 class Ui_DockWidget(object):
     def setupUi(self, DockWidget):
         DockWidget.setObjectName("DockWidget")
-        DockWidget.resize(367, 494)
+        DockWidget.resize(367, 526)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("icons-new/Center-Align.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         DockWidget.setWindowIcon(icon)
@@ -1465,7 +1537,7 @@ class Ui_DockWidget(object):
         self.PB_makeShell_2.setText("mk Solid 2")
         self.PB_makeShell_2.setObjectName("PB_makeShell_2")
         self.PB_check_TypeId = QtGui.QPushButton(self.dockWidgetContents)
-        self.PB_check_TypeId.setGeometry(QtCore.QRect(188, 432, 81, 28))
+        self.PB_check_TypeId.setGeometry(QtCore.QRect(188, 468, 81, 28))
         font = QtGui.QFont()
         font.setWeight(50)
         font.setItalic(False)
@@ -1548,7 +1620,7 @@ class Ui_DockWidget(object):
         self.PB_right.setText("")
         self.PB_right.setObjectName("PB_right")
         self.PB_makeEdge = QtGui.QPushButton(self.dockWidgetContents)
-        self.PB_makeEdge.setGeometry(QtCore.QRect(12, 432, 81, 28))
+        self.PB_makeEdge.setGeometry(QtCore.QRect(12, 468, 81, 28))
         self.PB_makeEdge.setToolTip("make Edge from selected Vertexes")
         self.PB_makeEdge.setText("mk Edge")
         self.PB_makeEdge.setObjectName("PB_makeEdge")
@@ -1560,7 +1632,7 @@ class Ui_DockWidget(object):
         self.PB_expSTEP.setObjectName("PB_expSTEP")
         self.PB_PartDefeaturing = QtGui.QPushButton(self.dockWidgetContents)
         self.PB_PartDefeaturing.setEnabled(False)
-        self.PB_PartDefeaturing.setGeometry(QtCore.QRect(100, 432, 81, 28))
+        self.PB_PartDefeaturing.setGeometry(QtCore.QRect(100, 468, 81, 28))
         self.PB_PartDefeaturing.setToolTip("show \'in List\' Edge(s)")
         self.PB_PartDefeaturing.setText("Defeat")
         self.PB_PartDefeaturing.setObjectName("PB_PartDefeaturing")
@@ -1570,6 +1642,31 @@ class Ui_DockWidget(object):
 "holes and merging Outwire")
         self.PB_CleaningFaces.setText("clean Faces")
         self.PB_CleaningFaces.setObjectName("PB_CleaningFaces")
+        self.PB_checkS = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_checkS.setGeometry(QtCore.QRect(12, 432, 81, 28))
+        self.PB_checkS.setToolTip("show \'in List\' Edge(s)")
+        self.PB_checkS.setText("check Shape")
+        self.PB_checkS.setObjectName("PB_checkS")
+        self.tolerance_value = QtGui.QLineEdit(self.dockWidgetContents)
+        self.tolerance_value.setGeometry(QtCore.QRect(192, 436, 73, 22))
+        self.tolerance_value.setToolTip("Face offset to apply")
+        self.tolerance_value.setText("0.0")
+        self.tolerance_value.setObjectName("tolerance_value")
+        self.PB_setTol = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_setTol.setGeometry(QtCore.QRect(276, 432, 81, 28))
+        self.PB_setTol.setToolTip("copy Faces from \'in List\' Edges")
+        self.PB_setTol.setText("set Tol")
+        self.PB_setTol.setObjectName("PB_setTol")
+        self.PB_getTol = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_getTol.setGeometry(QtCore.QRect(100, 432, 81, 28))
+        self.PB_getTol.setToolTip("copy Faces from \'in List\' Edges")
+        self.PB_getTol.setText("get Tol")
+        self.PB_getTol.setObjectName("PB_getTol")
+        self.PB_sewS = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_sewS.setGeometry(QtCore.QRect(276, 468, 81, 28))
+        self.PB_sewS.setToolTip("copy Faces from \'in List\' Edges")
+        self.PB_sewS.setText("sew Shape")
+        self.PB_sewS.setObjectName("PB_sewS")
         DockWidget.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(DockWidget)
@@ -1607,7 +1704,17 @@ class Ui_DockWidget(object):
         self.PB_PartDefeaturing.clicked.connect(PartDefeaturing_RH)
         self.PB_PartDefeaturing.setVisible(False)
         self.PB_CleaningFaces.clicked.connect(cleaningFaces_RH)
-        
+        self.PB_checkS.clicked.connect(checkShape)
+        self.PB_checkS.setToolTip("geometry check")
+        self.PB_setTol.clicked.connect(setTolerance)
+        self.PB_setTol.setToolTip("set Tolerance value")
+        self.PB_getTol.clicked.connect(getTolerance)
+        self.PB_getTol.setToolTip("get Tolerance value")
+        self.PB_sewS.clicked.connect(sewShape)
+        self.PB_sewS.setToolTip("sew a shape")
+        self.tolerance_value.setToolTip("tolerance value to be applied")
+        self.tolerance_value.setText("0.0001")
+
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(closeW_b64))
         self.PB_close.setGeometry(QtCore.QRect(-1, -1, 20, 20))

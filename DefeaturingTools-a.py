@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'C:\Users\userC\Documents\GitHub\Defeaturing_WB\DefeaturingTools.ui'
 #
-# Created: Fri Jul 06 09:24:35 2018
+# Created: Fri Jul 13 18:46:29 2018
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_DockWidget(object):
     def setupUi(self, DockWidget):
         DockWidget.setObjectName("DockWidget")
-        DockWidget.resize(367, 494)
+        DockWidget.resize(367, 526)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("icons-new/Center-Align.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         DockWidget.setWindowIcon(icon)
@@ -114,7 +114,7 @@ class Ui_DockWidget(object):
         self.PB_makeShell_2.setText("mk Solid 2")
         self.PB_makeShell_2.setObjectName("PB_makeShell_2")
         self.PB_check_TypeId = QtGui.QPushButton(self.dockWidgetContents)
-        self.PB_check_TypeId.setGeometry(QtCore.QRect(188, 432, 81, 28))
+        self.PB_check_TypeId.setGeometry(QtCore.QRect(188, 468, 81, 28))
         font = QtGui.QFont()
         font.setWeight(50)
         font.setItalic(False)
@@ -197,7 +197,7 @@ class Ui_DockWidget(object):
         self.PB_right.setText("")
         self.PB_right.setObjectName("PB_right")
         self.PB_makeEdge = QtGui.QPushButton(self.dockWidgetContents)
-        self.PB_makeEdge.setGeometry(QtCore.QRect(12, 432, 81, 28))
+        self.PB_makeEdge.setGeometry(QtCore.QRect(12, 468, 81, 28))
         self.PB_makeEdge.setToolTip("make Edge from selected Vertexes")
         self.PB_makeEdge.setText("mk Edge")
         self.PB_makeEdge.setObjectName("PB_makeEdge")
@@ -209,7 +209,7 @@ class Ui_DockWidget(object):
         self.PB_expSTEP.setObjectName("PB_expSTEP")
         self.PB_PartDefeaturing = QtGui.QPushButton(self.dockWidgetContents)
         self.PB_PartDefeaturing.setEnabled(False)
-        self.PB_PartDefeaturing.setGeometry(QtCore.QRect(100, 432, 81, 28))
+        self.PB_PartDefeaturing.setGeometry(QtCore.QRect(100, 468, 81, 28))
         self.PB_PartDefeaturing.setToolTip("show \'in List\' Edge(s)")
         self.PB_PartDefeaturing.setText("Defeat")
         self.PB_PartDefeaturing.setObjectName("PB_PartDefeaturing")
@@ -219,6 +219,31 @@ class Ui_DockWidget(object):
 "holes and merging Outwire")
         self.PB_CleaningFaces.setText("clean Faces")
         self.PB_CleaningFaces.setObjectName("PB_CleaningFaces")
+        self.PB_checkS = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_checkS.setGeometry(QtCore.QRect(12, 432, 81, 28))
+        self.PB_checkS.setToolTip("show \'in List\' Edge(s)")
+        self.PB_checkS.setText("check Shape")
+        self.PB_checkS.setObjectName("PB_checkS")
+        self.tolerance_value = QtGui.QLineEdit(self.dockWidgetContents)
+        self.tolerance_value.setGeometry(QtCore.QRect(192, 436, 73, 22))
+        self.tolerance_value.setToolTip("Face offset to apply")
+        self.tolerance_value.setText("0.0")
+        self.tolerance_value.setObjectName("tolerance_value")
+        self.PB_setTol = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_setTol.setGeometry(QtCore.QRect(276, 432, 81, 28))
+        self.PB_setTol.setToolTip("copy Faces from \'in List\' Edges")
+        self.PB_setTol.setText("set Tol")
+        self.PB_setTol.setObjectName("PB_setTol")
+        self.PB_getTol = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_getTol.setGeometry(QtCore.QRect(100, 432, 81, 28))
+        self.PB_getTol.setToolTip("copy Faces from \'in List\' Edges")
+        self.PB_getTol.setText("get Tol")
+        self.PB_getTol.setObjectName("PB_getTol")
+        self.PB_sewS = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_sewS.setGeometry(QtCore.QRect(276, 468, 81, 28))
+        self.PB_sewS.setToolTip("copy Faces from \'in List\' Edges")
+        self.PB_sewS.setText("sew Shape")
+        self.PB_sewS.setObjectName("PB_sewS")
         DockWidget.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(DockWidget)

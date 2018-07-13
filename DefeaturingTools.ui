@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>367</width>
-    <height>494</height>
+    <height>526</height>
    </rect>
   </property>
   <property name="windowIcon">
@@ -314,7 +314,7 @@ of the selected Objects</string>
     <property name="geometry">
      <rect>
       <x>188</x>
-      <y>432</y>
+      <y>468</y>
       <width>81</width>
       <height>28</height>
      </rect>
@@ -569,7 +569,7 @@ of the selected Objects</string>
     <property name="geometry">
      <rect>
       <x>12</x>
-      <y>432</y>
+      <y>468</y>
       <width>81</width>
       <height>28</height>
      </rect>
@@ -605,7 +605,7 @@ of the selected Objects</string>
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>432</y>
+      <y>468</y>
       <width>81</width>
       <height>28</height>
      </rect>
@@ -632,6 +632,86 @@ holes and merging Outwire</string>
     </property>
     <property name="text">
      <string notr="true">clean Faces</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_checkS">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>432</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">show 'in List' Edge(s)</string>
+    </property>
+    <property name="text">
+     <string notr="true">check Shape</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="tolerance_value">
+    <property name="geometry">
+     <rect>
+      <x>192</x>
+      <y>436</y>
+      <width>73</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">Face offset to apply</string>
+    </property>
+    <property name="text">
+     <string notr="true">0.0</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_setTol">
+    <property name="geometry">
+     <rect>
+      <x>276</x>
+      <y>432</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">copy Faces from 'in List' Edges</string>
+    </property>
+    <property name="text">
+     <string notr="true">set Tol</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_getTol">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>432</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">copy Faces from 'in List' Edges</string>
+    </property>
+    <property name="text">
+     <string notr="true">get Tol</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_sewS">
+    <property name="geometry">
+     <rect>
+      <x>276</x>
+      <y>468</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">copy Faces from 'in List' Edges</string>
+    </property>
+    <property name="text">
+     <string notr="true">sew Shape</string>
     </property>
    </widget>
   </widget>
