@@ -378,7 +378,8 @@ def sewShape():
         if hasattr(o,'Shape'):
             sh = o.Shape.copy()
             sh.sewShape()
-            Part.show(sh)
+            sl = Part.Solid(sh)
+            Part.show(sl)
     else:
         msg="Select one or more object(s) to be checked!\n"
         reply = QtGui.QMessageBox.information(None,"Warning", msg)
