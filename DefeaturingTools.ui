@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>367</width>
-    <height>526</height>
+    <width>260</width>
+    <height>534</height>
    </rect>
   </property>
   <property name="windowIcon">
@@ -35,39 +35,39 @@
      <rect>
       <x>12</x>
       <y>288</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">remove Hole from Face</string>
     </property>
     <property name="text">
-     <string notr="true">del Hole</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_Edges">
     <property name="geometry">
      <rect>
-      <x>288</x>
+      <x>220</x>
       <y>36</y>
-      <width>69</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">add selected Edges to List</string>
     </property>
     <property name="text">
-     <string notr="true">Confirm</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPlainTextEdit" name="TE_Faces">
     <property name="geometry">
      <rect>
-      <x>41</x>
+      <x>24</x>
       <y>164</y>
-      <width>237</width>
+      <width>190</width>
       <height>71</height>
      </rect>
     </property>
@@ -78,7 +78,7 @@
    <widget class="QCheckBox" name="checkBox_keep_original">
     <property name="geometry">
      <rect>
-      <x>248</x>
+      <x>124</x>
       <y>252</y>
       <width>110</width>
       <height>33</height>
@@ -97,7 +97,7 @@
    <widget class="QLabel" name="InfoLabel">
     <property name="geometry">
      <rect>
-      <x>43</x>
+      <x>24</x>
       <y>0</y>
       <width>196</width>
       <height>36</height>
@@ -114,9 +114,9 @@ Ctrl+Click</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>41</x>
+      <x>24</x>
       <y>36</y>
-      <width>237</width>
+      <width>190</width>
       <height>66</height>
      </rect>
     </property>
@@ -130,49 +130,55 @@ Ctrl+Click</string>
    <widget class="QPushButton" name="PB_Faces">
     <property name="geometry">
      <rect>
-      <x>288</x>
+      <x>220</x>
       <y>164</y>
-      <width>69</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">add selected Faces to List</string>
     </property>
     <property name="text">
-     <string notr="true">Confirm</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_Edges_Clear">
     <property name="geometry">
      <rect>
-      <x>288</x>
+      <x>220</x>
       <y>71</y>
-      <width>69</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string notr="true">clear List</string>
+    </property>
     <property name="text">
-     <string notr="true">Clear List</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_Faces_Clear">
     <property name="geometry">
      <rect>
-      <x>288</x>
+      <x>220</x>
       <y>200</y>
-      <width>69</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string notr="true">clear List</string>
+    </property>
     <property name="text">
-     <string notr="true">Clear List</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QLabel" name="Edge_Nbr">
     <property name="geometry">
      <rect>
-      <x>59</x>
+      <x>48</x>
       <y>104</y>
       <width>53</width>
       <height>16</height>
@@ -185,7 +191,7 @@ Ctrl+Click</string>
    <widget class="QLabel" name="Face_Nbr">
     <property name="geometry">
      <rect>
-      <x>59</x>
+      <x>48</x>
       <y>236</y>
       <width>53</width>
       <height>16</height>
@@ -198,7 +204,7 @@ Ctrl+Click</string>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>43</x>
+      <x>24</x>
       <y>124</y>
       <width>177</width>
       <height>45</height>
@@ -212,9 +218,9 @@ Ctrl+Click</string>
    <widget class="QCheckBox" name="checkBox_Refine">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>12</x>
       <y>260</y>
-      <width>100</width>
+      <width>89</width>
       <height>20</height>
      </rect>
     </property>
@@ -232,8 +238,8 @@ after the operation </string>
    <widget class="QCheckBox" name="checkBox_keep_faces">
     <property name="geometry">
      <rect>
-      <x>116</x>
-      <y>260</y>
+      <x>128</x>
+      <y>140</y>
       <width>100</width>
       <height>20</height>
      </rect>
@@ -248,33 +254,33 @@ after the operation </string>
    <widget class="QPushButton" name="PB_RFaces">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>68</x>
       <y>288</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">remove 'in List' Faces</string>
     </property>
     <property name="text">
-     <string notr="true">del Faces</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_AFaces">
     <property name="geometry">
      <rect>
-      <x>188</x>
+      <x>124</x>
       <y>288</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">add Faces from 'in List' Edges</string>
     </property>
     <property name="text">
-     <string notr="true">add Faces</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_makeShell">
@@ -282,24 +288,24 @@ after the operation </string>
      <rect>
       <x>12</x>
       <y>360</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">make Solid from in list Faces</string>
     </property>
     <property name="text">
-     <string notr="true">mk Solid</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_makeShell_2">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>68</x>
       <y>360</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -307,16 +313,16 @@ after the operation </string>
 of the selected Objects</string>
     </property>
     <property name="text">
-     <string notr="true">mk Solid 2</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_check_TypeId">
     <property name="geometry">
      <rect>
-      <x>188</x>
+      <x>124</x>
       <y>468</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="font">
@@ -331,13 +337,13 @@ of the selected Objects</string>
      <string notr="true">show/hide TypeId of the Shape</string>
     </property>
     <property name="text">
-     <string notr="true">? TypeId</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QLabel" name="Obj_Nbr">
     <property name="geometry">
      <rect>
-      <x>223</x>
+      <x>164</x>
       <y>104</y>
       <width>53</width>
       <height>16</height>
@@ -350,7 +356,7 @@ of the selected Objects</string>
    <widget class="QLabel" name="Obj_Nbr_2">
     <property name="geometry">
      <rect>
-      <x>223</x>
+      <x>164</x>
       <y>236</y>
       <width>53</width>
       <height>16</height>
@@ -363,17 +369,17 @@ of the selected Objects</string>
    <widget class="QPushButton" name="PB_AEdges">
     <property name="geometry">
      <rect>
-      <x>276</x>
+      <x>220</x>
       <y>288</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">create a copy of the 'in List' Edges</string>
     </property>
     <property name="text">
-     <string notr="true">add Edges</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_showEdgeList">
@@ -381,63 +387,63 @@ of the selected Objects</string>
      <rect>
       <x>12</x>
       <y>396</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">show 'in List' Edge(s)</string>
     </property>
     <property name="text">
-     <string notr="true">show Edges</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_showFaceList">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>68</x>
       <y>396</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">show 'in List' Face(s)</string>
     </property>
     <property name="text">
-     <string notr="true">show Faces</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_Refine">
     <property name="geometry">
      <rect>
-      <x>188</x>
+      <x>124</x>
       <y>396</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">refine</string>
     </property>
     <property name="text">
-     <string notr="true">Refine</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_RefineParametric">
     <property name="geometry">
      <rect>
-      <x>276</x>
+      <x>220</x>
       <y>396</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">parametric Refine</string>
     </property>
     <property name="text">
-     <string notr="true">prm Refine</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_CFaces">
@@ -445,37 +451,37 @@ of the selected Objects</string>
      <rect>
       <x>12</x>
       <y>324</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">copy Faces from 'in List' Edges</string>
     </property>
     <property name="text">
-     <string notr="true">cpy Faces</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_TFace">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>68</x>
       <y>324</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">copy Faces from 'in List' Edges</string>
     </property>
     <property name="text">
-     <string notr="true">offset Face</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QLineEdit" name="offset_input">
     <property name="geometry">
      <rect>
-      <x>192</x>
+      <x>128</x>
       <y>328</y>
       <width>73</width>
       <height>22</height>
@@ -491,17 +497,17 @@ of the selected Objects</string>
    <widget class="QPushButton" name="PB_TEdge">
     <property name="geometry">
      <rect>
-      <x>276</x>
+      <x>220</x>
       <y>324</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">copy Faces from 'in List' Edges</string>
     </property>
     <property name="text">
-     <string notr="true">offset Edge</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_close">
@@ -523,7 +529,7 @@ of the selected Objects</string>
    <widget class="QLabel" name="Version">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>216</x>
       <y>0</y>
       <width>53</width>
       <height>16</height>
@@ -570,24 +576,24 @@ of the selected Objects</string>
      <rect>
       <x>12</x>
       <y>468</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">make Edge from selected Vertexes</string>
     </property>
     <property name="text">
-     <string notr="true">mk Edge</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_expSTEP">
     <property name="geometry">
      <rect>
-      <x>188</x>
+      <x>124</x>
       <y>360</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -595,7 +601,7 @@ of the selected Objects</string>
 of the selected Objects</string>
     </property>
     <property name="text">
-     <string notr="true">mk Solid 3</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_PartDefeaturing">
@@ -604,26 +610,26 @@ of the selected Objects</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>68</x>
       <y>468</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">show 'in List' Edge(s)</string>
     </property>
     <property name="text">
-     <string notr="true">Defeat</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_CleaningFaces">
     <property name="geometry">
      <rect>
-      <x>276</x>
+      <x>220</x>
       <y>360</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -631,7 +637,7 @@ of the selected Objects</string>
 holes and merging Outwire</string>
     </property>
     <property name="text">
-     <string notr="true">clean Faces</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_checkS">
@@ -639,21 +645,21 @@ holes and merging Outwire</string>
      <rect>
       <x>12</x>
       <y>432</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">show 'in List' Edge(s)</string>
     </property>
     <property name="text">
-     <string notr="true">check Shape</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QLineEdit" name="tolerance_value">
     <property name="geometry">
      <rect>
-      <x>192</x>
+      <x>128</x>
       <y>436</y>
       <width>73</width>
       <height>22</height>
@@ -669,49 +675,49 @@ holes and merging Outwire</string>
    <widget class="QPushButton" name="PB_setTol">
     <property name="geometry">
      <rect>
-      <x>276</x>
+      <x>220</x>
       <y>432</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">copy Faces from 'in List' Edges</string>
     </property>
     <property name="text">
-     <string notr="true">set Tol</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_getTol">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>68</x>
       <y>432</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">copy Faces from 'in List' Edges</string>
     </property>
     <property name="text">
-     <string notr="true">get Tol</string>
+     <string notr="true"/>
     </property>
    </widget>
    <widget class="QPushButton" name="PB_sewS">
     <property name="geometry">
      <rect>
-      <x>276</x>
+      <x>220</x>
       <y>468</y>
-      <width>81</width>
-      <height>28</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
      <string notr="true">copy Faces from 'in List' Edges</string>
     </property>
     <property name="text">
-     <string notr="true">sew Shape</string>
+     <string notr="true"/>
     </property>
    </widget>
   </widget>
