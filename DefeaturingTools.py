@@ -379,7 +379,10 @@ def sewShape():
             sh = o.Shape.copy()
             sh.sewShape()
             sl = Part.Solid(sh)
+            docG.getObject(o.Name).Visibility = False
             Part.show(sl)
+            ao = FreeCAD.ActiveDocument.ActiveObject
+            ao.Label = 'Solid'
     else:
         msg="Select one or more object(s) to be checked!\n"
         reply = QtGui.QMessageBox.information(None,"Warning", msg)
@@ -396,7 +399,7 @@ def getTolerance():
         o = sel[0]
         if hasattr(o,'Shape'):
             tol = o.Shape.getTolerance(0)
-            i_say(str(tol))
+            i_say(mk_str(o.Label)+' tolerance = '+str(tol))
     else:
         msg="Select one or more object(s) to be checked!\n"
         reply = QtGui.QMessageBox.information(None,"Warning", msg)
@@ -413,12 +416,14 @@ def setTolerance():
         o = sel[0]
         if hasattr(o,'Shape'):
             ns = o.Shape.copy()
-            i_say (str(ns.getTolerance(0)))
+            i_say (mk_str(o.Label)+' tolerance = '+str(ns.getTolerance(0)))
             new_tol = float(RHDockWidget.ui.tolerance_value.text())
             ns.fixTolerance(new_tol) #1e-4)
+            docG.getObject(o.Name).Visibility = False
             Part.show(ns)
             ao = FreeCAD.ActiveDocument.ActiveObject
-            i_say (str(ao.Shape.getTolerance(0)))
+            ao.Label = 'Solid'
+            i_say (mk_str(ao.Label)+' tolerance = '+str(ao.Shape.getTolerance(0)))
     else:
         msg="Select one or more object(s) to be checked!\n"
         reply = QtGui.QMessageBox.information(None,"Warning", msg)
