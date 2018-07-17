@@ -610,8 +610,8 @@ of the selected Objects</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>68</x>
-      <y>468</y>
+      <x>172</x>
+      <y>288</y>
       <width>32</width>
       <height>32</height>
      </rect>

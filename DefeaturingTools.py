@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.2.2"
+__version__ = "v1.2.3"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -100,7 +100,15 @@ def checking_BOP(o):
         chks=checkBOP(o.Shape)
         if chks is not True:
             i_sayerr('shape \''+o.Name+'\' \''+mk_str(o.Label)+'\' is INVALID!\n')
-            i_sayw(chks[0])
+            i_sayw(mk_str(chks[0]))
+            if 'No error' in mk_str(chks[0]):
+                if len (o.Shape.Shells) > 0:
+                    for sh in o.Shape.Shells:
+                        try:
+                            sh.check(True)
+                        except:
+                            i_sayerr(mk_str(o.Label)+'.shell errors:')
+                            i_sayw(mk_str(sys.exc_info()[1]))
         else:
             i_say('shape \''+o.Name+'\' \''+mk_str(o.Label)+'\' is valid\n')
 ##
@@ -1750,7 +1758,7 @@ class Ui_DockWidget(object):
         self.PB_expSTEP.setObjectName("PB_expSTEP")
         self.PB_PartDefeaturing = QtGui.QPushButton(self.dockWidgetContents)
         self.PB_PartDefeaturing.setEnabled(False)
-        self.PB_PartDefeaturing.setGeometry(QtCore.QRect(68, 468, 32, 32))
+        self.PB_PartDefeaturing.setGeometry(QtCore.QRect(172, 288, 32, 32))
         self.PB_PartDefeaturing.setToolTip("show \'in List\' Edge(s)")
         self.PB_PartDefeaturing.setText("")
         self.PB_PartDefeaturing.setObjectName("PB_PartDefeaturing")
