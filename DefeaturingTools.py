@@ -30,12 +30,28 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.2.3"
+__version__ = "v1.2.4"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
 ## shape.getTolerance(0), shape.fixTolerance(1e-4) 
 ## shape.fixTolerance(1.e-4), shape.check(True)
+from sys import platform as _platform
+
+# window GUI dimensions parameters
+wdsRHx=260;wdsRHy=534
+pt_osx=False
+if _platform == "linux" or _platform == "linux2":
+    # linux
+    sizeX=wdsRHx;sizeY=wdsRHy-22+34 #516 #536
+else:
+    sizeX=wdsRHx;sizeY=wdsRHy-22 #482#502
+if _platform == "darwin":
+    pt_osx=True
+##   # MAC OS X
+##elif _platform == "win32":
+##   # Windows
+btn_sizeX=28;btn_sizeY=28
 
 
 invert = True
@@ -1803,107 +1819,107 @@ class Ui_DockWidget(object):
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(copy_edges_b64))
-        self.PB_AEdges.setIconSize(QtCore.QSize(28,28))
+        self.PB_AEdges.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_AEdges.setIcon(QtGui.QIcon(pm))
         self.PB_AEdges.clicked.connect(addEdges_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(mk_solid1_b64))
-        self.PB_makeShell.setIconSize(QtCore.QSize(28,28))
+        self.PB_makeShell.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_makeShell.setIcon(QtGui.QIcon(pm))
         self.PB_makeShell.clicked.connect(merge_selected_faces_RH)
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(mk_solid2_b64))
-        self.PB_makeShell_2.setIconSize(QtCore.QSize(28,28))
+        self.PB_makeShell_2.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_makeShell_2.setIcon(QtGui.QIcon(pm))
         self.PB_makeShell_2.clicked.connect(merge_faces_from_selected_objects_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(check_type_b64))
-        self.PB_check_TypeId.setIconSize(QtCore.QSize(28,28))
+        self.PB_check_TypeId.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_check_TypeId.setIcon(QtGui.QIcon(pm))
         self.PB_check_TypeId.clicked.connect(check_TypeId_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(add_edges_b64))
-        self.PB_Edges.setIconSize(QtCore.QSize(28,28))
+        self.PB_Edges.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_Edges.setIcon(QtGui.QIcon(pm))        
         self.PB_Edges.clicked.connect(edges_confirmed_RH)
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(clear_b64))
-        self.PB_Edges_Clear.setIconSize(QtCore.QSize(28,28))
+        self.PB_Edges_Clear.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_Edges_Clear.setIcon(QtGui.QIcon(pm))        
         self.PB_Edges_Clear.clicked.connect(clear_all_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(clear_b64))
-        self.PB_Faces_Clear.setIconSize(QtCore.QSize(28,28))
+        self.PB_Faces_Clear.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_Faces_Clear.setIcon(QtGui.QIcon(pm))        
         self.PB_Faces_Clear.clicked.connect(clear_all_RH)
         self.PB_Faces_Clear.clicked.connect(clear_all_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(add_faces_b64))
-        self.PB_Faces.setIconSize(QtCore.QSize(28,28))
+        self.PB_Faces.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_Faces.setIcon(QtGui.QIcon(pm))
         self.PB_Faces.clicked.connect(faces_confirmed_RH)
 
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(del_hole_b64))
-        self.PB_RHoles.setIconSize(QtCore.QSize(28,28))
+        self.PB_RHoles.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_RHoles.setIcon(QtGui.QIcon(pm))
         self.PB_RHoles.clicked.connect(removeHoles_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(del_face_b64))
-        self.PB_RFaces.setIconSize(QtCore.QSize(28,28))
+        self.PB_RFaces.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_RFaces.setIcon(QtGui.QIcon(pm))
         self.PB_RFaces.clicked.connect(removeFaces_RH)
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(add_face_b64))
-        self.PB_AFaces.setIconSize(QtCore.QSize(28,28))
+        self.PB_AFaces.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_AFaces.setIcon(QtGui.QIcon(pm))
         self.PB_AFaces.clicked.connect(addFaces_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(copy_face_b64))
-        self.PB_CFaces.setIconSize(QtCore.QSize(28,28))
+        self.PB_CFaces.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_CFaces.setIcon(QtGui.QIcon(pm))
         self.PB_CFaces.clicked.connect(copyFaces_RH)
         self.checkBox_keep_original.setChecked(True)
         self.checkBox_keep_faces.setChecked(False)
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(refine_b64))
-        self.PB_Refine.setIconSize(QtCore.QSize(28,28))
+        self.PB_Refine.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_Refine.setIcon(QtGui.QIcon(pm))
         self.PB_Refine.clicked.connect(refine_RH)
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(refine_feature_b64))
-        self.PB_RefineParametric.setIconSize(QtCore.QSize(28,28))
+        self.PB_RefineParametric.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_RefineParametric.setIcon(QtGui.QIcon(pm))
         self.PB_RefineParametric.clicked.connect(refine_parametric_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(show_edges_b64))
-        self.PB_showEdgeList.setIconSize(QtCore.QSize(28,28))
+        self.PB_showEdgeList.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_showEdgeList.setIcon(QtGui.QIcon(pm))
         self.PB_showEdgeList.clicked.connect(showEdges_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(show_faces_b64))
-        self.PB_showFaceList.setIconSize(QtCore.QSize(28,28))
+        self.PB_showFaceList.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_showFaceList.setIcon(QtGui.QIcon(pm))
         self.PB_showFaceList.clicked.connect(showFaces_RH)
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(offset_face_b64))
-        self.PB_TFace.setIconSize(QtCore.QSize(28,28))
+        self.PB_TFace.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_TFace.setIcon(QtGui.QIcon(pm))
         self.PB_TFace.setToolTip('offset face')
         self.PB_TFace.clicked.connect(offsetFaces_RH)
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(offset_edge_b64))
-        self.PB_TEdge.setIconSize(QtCore.QSize(28,28))
+        self.PB_TEdge.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_TEdge.setIcon(QtGui.QIcon(pm))
         self.PB_TEdge.setToolTip('offset edge')
         self.PB_TEdge.clicked.connect(offsetEdges_RH)
@@ -1913,12 +1929,12 @@ class Ui_DockWidget(object):
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(create_edge_b64))
-        self.PB_makeEdge.setIconSize(QtCore.QSize(28,28))
+        self.PB_makeEdge.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_makeEdge.setIcon(QtGui.QIcon(pm))
         self.PB_makeEdge.clicked.connect(makeEdge_RH)
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(mk_solid3_b64))
-        self.PB_expSTEP.setIconSize(QtCore.QSize(28,28))
+        self.PB_expSTEP.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_expSTEP.setIcon(QtGui.QIcon(pm))
         self.PB_expSTEP.clicked.connect(makeSolidExpSTEP_RH)
         self.PB_expSTEP.setToolTip("select ONE object to try to make a Solid\nthrough STEP import/export process")
@@ -1927,7 +1943,7 @@ class Ui_DockWidget(object):
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(defeaturing_b64))
-        self.PB_PartDefeaturing.setIconSize(QtCore.QSize(28,28))
+        self.PB_PartDefeaturing.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_PartDefeaturing.setIcon(QtGui.QIcon(pm))
         self.PB_PartDefeaturing.clicked.connect(PartDefeaturing_RH)
         #self.PB_PartDefeaturing.setVisible(False)
@@ -1937,35 +1953,35 @@ class Ui_DockWidget(object):
         
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(clean_face_b64))
-        self.PB_CleaningFaces.setIconSize(QtCore.QSize(28,28))
+        self.PB_CleaningFaces.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_CleaningFaces.setIcon(QtGui.QIcon(pm))
         self.PB_CleaningFaces.clicked.connect(cleaningFaces_RH)
 
 
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(check_geo_b64))
-        self.PB_checkS.setIconSize(QtCore.QSize(28,28))
+        self.PB_checkS.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_checkS.setIcon(QtGui.QIcon(pm))
         self.PB_checkS.clicked.connect(checkShape)
         self.PB_checkS.setToolTip("geometry check")
 
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(setTol_b64))
-        self.PB_setTol.setIconSize(QtCore.QSize(28,28))
+        self.PB_setTol.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_setTol.setIcon(QtGui.QIcon(pm))
         self.PB_setTol.clicked.connect(setTolerance)
         self.PB_setTol.setToolTip("set Tolerance value")
 
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(getTol_b64))
-        self.PB_getTol.setIconSize(QtCore.QSize(28,28))
+        self.PB_getTol.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_getTol.setIcon(QtGui.QIcon(pm))
         self.PB_getTol.clicked.connect(getTolerance)
         self.PB_getTol.setToolTip("get Tolerance value")
         self.PB_sewS.clicked.connect(sewShape)
         pm = QtGui.QPixmap()
         pm.loadFromData(base64.b64decode(sew_shape_b64))
-        self.PB_sewS.setIconSize(QtCore.QSize(28,28))
+        self.PB_sewS.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_sewS.setIcon(QtGui.QIcon(pm))
         self.PB_sewS.setToolTip("sew a shape")
         self.tolerance_value.setToolTip("tolerance value to be applied")
@@ -1995,7 +2011,9 @@ class Ui_DockWidget(object):
         self.PB_right.setIconSize(QtCore.QSize(16,16))
         self.PB_right.setIcon(QtGui.QIcon(pm))
         self.PB_right.clicked.connect(dock_right_RH)
-   
+        if pt_osx:
+            self.InfoLabel.setText("Select Edge(s)\nCmd+Click")   
+            self.label.setText("Select Face(s)\nCmd+Click")
 ################################################################################################
     def retranslateUi(self, DockWidget):
         pass
@@ -2070,6 +2088,17 @@ def dock_left_RH():
             d_tab.raise_()
         #say ("focus on me!")
 ##
+def RH_centerOnScreen (widg):
+    '''centerOnScreen()
+    Centers the window on the screen.'''
+    # sayw(widg.width());sayw(widg.height())
+    # sayw(widg.pos().x());sayw(widg.pos().y())
+    resolution = QtGui.QDesktopWidget().screenGeometry()
+    xp=(resolution.width() / 2) - sizeX/2 # - (KSUWidget.frameSize().width() / 2)
+    yp=(resolution.height() / 2) - sizeY/2 # - (KSUWidget.frameSize().height() / 2))
+    # xp=widg.pos().x()-sizeXMax/2;yp=widg.pos().y()#+sizeY/2
+    widg.setGeometry(xp, yp, sizeX, sizeY)
+##
 
 doc=FreeCAD.ActiveDocument
 if RH_singleInstance():
@@ -2100,6 +2129,8 @@ if RH_singleInstance():
     RHmw = FreeCADGui.getMainWindow()                 # PySide # the active qt window, = the freecad window since we are inside it
     RHmw.addDockWidget(QtCore.Qt.RightDockWidgetArea,RHDockWidget)
     RHDockWidget.setFloating(True)  #undock
+    #RHDockWidget.resize(sizeX,sizeY)
+    RH_centerOnScreen(RHDockWidget)
     RHDockWidget.ui.Version.setText(__version__)
     
     if hasattr(Part, "OCC_VERSION"):
