@@ -2127,7 +2127,7 @@ def onHelp():
         OCCmV = Part.OCC_VERSION.split('.')[1]
         msg=msg+"""OCC version: """+str(Part.OCC_VERSION)+"""<br>"""
     else:
-        msg=msg+"""OCC version < 7.0<br>"""
+        msg=msg+"""OCC version &lt; 7.0<br>"""
     msg=msg+"""
     <font color = blue>Defeaturing Tools Version:  
     """+__version__+"""</font>"""
