@@ -720,6 +720,22 @@ holes and merging Outwire</string>
      <string notr="true"/>
     </property>
    </widget>
+   <widget class="QPushButton" name="PB_RHhelp">
+    <property name="geometry">
+     <rect>
+      <x>172</x>
+      <y>468</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">Help</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

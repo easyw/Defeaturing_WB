@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'C:\Users\userC\Documents\GitHub\Defeaturing_WB\DefeaturingTools.ui'
 #
-# Created: Wed Jul 18 12:08:01 2018
+# Created: Wed Jul 18 12:50:18 2018
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -246,6 +246,11 @@ class Ui_DockWidget(object):
         self.PB_sewS.setToolTip("copy Faces from \'in List\' Edges")
         self.PB_sewS.setText("")
         self.PB_sewS.setObjectName("PB_sewS")
+        self.PB_RHhelp = QtGui.QPushButton(self.dockWidgetContents)
+        self.PB_RHhelp.setGeometry(QtCore.QRect(172, 468, 32, 32))
+        self.PB_RHhelp.setToolTip("Help")
+        self.PB_RHhelp.setText("")
+        self.PB_RHhelp.setObjectName("PB_RHhelp")
         DockWidget.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(DockWidget)
