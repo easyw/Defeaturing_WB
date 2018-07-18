@@ -1748,7 +1748,7 @@ class Ui_DockWidget(object):
         self.PB_close.setText("")
         self.PB_close.setObjectName("PB_close")
         self.Version = QtGui.QLabel(self.dockWidgetContents)
-        self.Version.setGeometry(QtCore.QRect(216, 0, 53, 16))
+        self.Version.setGeometry(QtCore.QRect(200, 0, 53, 16))
         self.Version.setText("0")
         self.Version.setObjectName("Version")
         self.PB_left = QtGui.QPushButton(self.dockWidgetContents)

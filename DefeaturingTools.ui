@@ -529,7 +529,7 @@ of the selected Objects</string>
    <widget class="QLabel" name="Version">
     <property name="geometry">
      <rect>
-      <x>216</x>
+      <x>200</x>
       <y>0</y>
       <width>53</width>
       <height>16</height>
