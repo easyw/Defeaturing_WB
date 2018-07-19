@@ -243,6 +243,7 @@ def refine_parametric_RH():
                 #docG.getObject(newobj.Name).ShapeColor=docG.getObject(selobj.Object.Name).ShapeColor
                 #docG.getObject(newobj.Name).LineColor=docG.getObject(selobj.Object.Name).LineColor
                 #docG.getObject(newobj.Name).PointColor=docG.getObject(selobj.Object.Name).PointColor
+                #docG.ActiveObject.DiffuseColor=docG.getObject(o.Name).DiffuseColor
                 #newobj.Label='r_%s' % selobj.Object.Label
                 newobj.Label=selobj.Object.Label
                 selobj.Object.ViewObject.hide()
@@ -261,7 +262,9 @@ def refine_RH():
                 docG.ActiveObject.ShapeColor=docG.getObject(o.Name).ShapeColor
                 docG.ActiveObject.LineColor=docG.getObject(o.Name).LineColor
                 docG.ActiveObject.PointColor=docG.getObject(o.Name).PointColor
+                docG.ActiveObject.DiffuseColor=docG.getObject(o.Name).DiffuseColor
                 doc.recompute()
+
 ##
 def edges_clear_RH():
     global rh_edges, rh_faces, rh_obj
