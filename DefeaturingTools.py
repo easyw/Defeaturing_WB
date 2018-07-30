@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.2.4"
+__version__ = "v1.2.5"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -410,6 +410,10 @@ def sewShape():
             Part.show(sl)
             ao = FreeCAD.ActiveDocument.ActiveObject
             ao.Label = 'Solid'
+            docG.ActiveObject.ShapeColor=docG.getObject(o.Name).ShapeColor
+            docG.ActiveObject.LineColor=docG.getObject(o.Name).LineColor
+            docG.ActiveObject.PointColor=docG.getObject(o.Name).PointColor
+            docG.ActiveObject.DiffuseColor=docG.getObject(o.Name).DiffuseColor
     else:
         msg="Select one or more object(s) to be checked!\n"
         reply = QtGui.QMessageBox.information(None,"Warning", msg)
@@ -449,6 +453,10 @@ def setTolerance():
             docG.getObject(o.Name).Visibility = False
             Part.show(ns)
             ao = FreeCAD.ActiveDocument.ActiveObject
+            docG.ActiveObject.ShapeColor=docG.getObject(o.Name).ShapeColor
+            docG.ActiveObject.LineColor=docG.getObject(o.Name).LineColor
+            docG.ActiveObject.PointColor=docG.getObject(o.Name).PointColor
+            docG.ActiveObject.DiffuseColor=docG.getObject(o.Name).DiffuseColor
             ao.Label = 'Solid'
             i_say (mk_str(ao.Label)+' tolerance = '+str(ao.Shape.getTolerance(0)))
     else:
@@ -801,6 +809,10 @@ def removeHoles_RH():
         #App.ActiveDocument.ActiveObject.Label=App.ActiveDocument.mysolid.Label
         mysolidr = doc.ActiveObject
         original_label = myshape.Label
+        docG.ActiveObject.ShapeColor=docG.getObject(myshape.Name).ShapeColor
+        docG.ActiveObject.LineColor=docG.getObject(myshape.Name).LineColor
+        docG.ActiveObject.PointColor=docG.getObject(myshape.Name).PointColor
+        docG.ActiveObject.DiffuseColor=docG.getObject(myshape.Name).DiffuseColor
         if RHDockWidget.ui.checkBox_keep_original.isChecked():
             docG.getObject(myshape.Name).Visibility=False
         else:
@@ -894,6 +906,10 @@ def removeFaces_RH():
             #App.ActiveDocument.ActiveObject.Label=App.ActiveDocument.mysolid.Label
         mysolidr = doc.ActiveObject
         original_label = myshape.Label
+        docG.ActiveObject.ShapeColor=docG.getObject(myshape.Name).ShapeColor
+        docG.ActiveObject.LineColor=docG.getObject(myshape.Name).LineColor
+        docG.ActiveObject.PointColor=docG.getObject(myshape.Name).PointColor
+        docG.ActiveObject.DiffuseColor=docG.getObject(myshape.Name).DiffuseColor
         if RHDockWidget.ui.checkBox_keep_original.isChecked():
             docG.getObject(myshape.Name).Visibility=False
         else:
@@ -1414,10 +1430,14 @@ def PartDefeaturing_RH():
         i_say(rh_faces)
         nsh = sh.defeaturing(rh_faces)
         if not sh.isPartner(nsh):
-                defeat = doc.addObject('Part::Feature','Defeatured').Shape = nsh
-                docG.getObject(rh_obj[0].Name).hide()
+            defeat = doc.addObject('Part::Feature','Defeatured').Shape = nsh
+            docG.getObject(rh_obj[0].Name).hide()
+            docG.ActiveObject.ShapeColor=docG.getObject(rh_obj[0].Name).ShapeColor
+            docG.ActiveObject.LineColor=docG.getObject(rh_obj[0].Name).LineColor
+            docG.ActiveObject.PointColor=docG.getObject(rh_obj[0].Name).PointColor
+            docG.ActiveObject.DiffuseColor=docG.getObject(rh_obj[0].Name).DiffuseColor
         else:
-                FreeCAD.Console.PrintError('Defeaturing failed\n')
+            FreeCAD.Console.PrintError('Defeaturing failed\n')
         doc.recompute()
 ##
 
