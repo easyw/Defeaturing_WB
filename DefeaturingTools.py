@@ -30,7 +30,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.2.5"
+__version__ = "v1.2.6"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -240,10 +240,12 @@ def refine_parametric_RH():
                 OpenSCADFeatures.RefineShape(newobj,selobj.Object)
                 OpenSCADFeatures.ViewProviderTree(newobj.ViewObject)
                 ## to do: see if it is possible to conserve colors in refining
-                #docG.getObject(newobj.Name).ShapeColor=docG.getObject(selobj.Object.Name).ShapeColor
-                #docG.getObject(newobj.Name).LineColor=docG.getObject(selobj.Object.Name).LineColor
-                #docG.getObject(newobj.Name).PointColor=docG.getObject(selobj.Object.Name).PointColor
-                #docG.ActiveObject.DiffuseColor=docG.getObject(o.Name).DiffuseColor
+                ao = FreeCAD.ActiveDocument.ActiveObject
+                docG.ActiveObject.ShapeColor=docG.getObject(selobj.Object.Name).ShapeColor
+                docG.ActiveObject.LineColor=docG.getObject(selobj.Object.Name).LineColor
+                docG.ActiveObject.PointColor=docG.getObject(selobj.Object.Name).PointColor
+                docG.ActiveObject.DiffuseColor=docG.getObject(selobj.Object.Name).DiffuseColor
+                docG.ActiveObject.Transparency=docG.getObject(selobj.Object.Name).Transparency
                 #newobj.Label='r_%s' % selobj.Object.Label
                 newobj.Label=selobj.Object.Label
                 selobj.Object.ViewObject.hide()
@@ -263,6 +265,7 @@ def refine_RH():
                 docG.ActiveObject.LineColor=docG.getObject(o.Name).LineColor
                 docG.ActiveObject.PointColor=docG.getObject(o.Name).PointColor
                 docG.ActiveObject.DiffuseColor=docG.getObject(o.Name).DiffuseColor
+                docG.ActiveObject.Transparency=docG.getObject(o.Name).Transparency
                 doc.recompute()
 
 ##
@@ -414,6 +417,7 @@ def sewShape():
             docG.ActiveObject.LineColor=docG.getObject(o.Name).LineColor
             docG.ActiveObject.PointColor=docG.getObject(o.Name).PointColor
             docG.ActiveObject.DiffuseColor=docG.getObject(o.Name).DiffuseColor
+            docG.ActiveObject.Transparency=docG.getObject(o.Name).Transparency
     else:
         msg="Select one or more object(s) to be checked!\n"
         reply = QtGui.QMessageBox.information(None,"Warning", msg)
@@ -457,6 +461,7 @@ def setTolerance():
             docG.ActiveObject.LineColor=docG.getObject(o.Name).LineColor
             docG.ActiveObject.PointColor=docG.getObject(o.Name).PointColor
             docG.ActiveObject.DiffuseColor=docG.getObject(o.Name).DiffuseColor
+            docG.ActiveObject.Transparency=docG.getObject(o.Name).Transparency
             ao.Label = 'Solid'
             i_say (mk_str(ao.Label)+' tolerance = '+str(ao.Shape.getTolerance(0)))
     else:
@@ -465,7 +470,7 @@ def setTolerance():
         FreeCAD.Console.PrintWarning(msg)           
     
 ##
-def merge_faces_from_selected_objects_RH():
+def merge_faces_from_selected_objects_RH(refobj=None):
     """merging Faces of selected shapes""" 
     
     faces = []
@@ -510,6 +515,18 @@ def merge_faces_from_selected_objects_RH():
         #App.ActiveDocument.ActiveObject.Label=App.ActiveDocument.mysolid.Label
         mysolidr = doc.ActiveObject
         #original_label = rh_obj.Label
+        if refobj is not None:
+            docG.ActiveObject.ShapeColor=docG.getObject(refobj.Name).ShapeColor
+            docG.ActiveObject.LineColor=docG.getObject(refobj.Name).LineColor
+            docG.ActiveObject.PointColor=docG.getObject(refobj.Name).PointColor
+            docG.ActiveObject.DiffuseColor=docG.getObject(refobj.Name).DiffuseColor
+            docG.ActiveObject.Transparency=docG.getObject(refobj.Name).Transparency
+        else:
+            docG.ActiveObject.ShapeColor=docG.getObject(sel[0].Name).ShapeColor
+            docG.ActiveObject.LineColor=docG.getObject(sel[0].Name).LineColor
+            docG.ActiveObject.PointColor=docG.getObject(sel[0].Name).PointColor
+            docG.ActiveObject.DiffuseColor=docG.getObject(sel[0].Name).DiffuseColor
+            docG.ActiveObject.Transparency=docG.getObject(sel[0].Name).Transparency
         if RHDockWidget.ui.checkBox_keep_original.isChecked():
             for o in sel:
                 docG.getObject(o.Name).Visibility=False
@@ -813,12 +830,15 @@ def removeHoles_RH():
         docG.ActiveObject.LineColor=docG.getObject(myshape.Name).LineColor
         docG.ActiveObject.PointColor=docG.getObject(myshape.Name).PointColor
         docG.ActiveObject.DiffuseColor=docG.getObject(myshape.Name).DiffuseColor
+        docG.ActiveObject.Transparency=docG.getObject(myshape.Name).Transparency
         if RHDockWidget.ui.checkBox_keep_original.isChecked():
             docG.getObject(myshape.Name).Visibility=False
         else:
             doc.removeObject(myshape.Name)
         if RHDockWidget.ui.checkBox_Refine.isChecked():
             mysolidr.Label = original_label # + "_refined"
+        else:
+            mysolidr.Label = original_label
         #mysolidr.hide()
         clear_all_RH()
         if force_recompute:
@@ -910,12 +930,15 @@ def removeFaces_RH():
         docG.ActiveObject.LineColor=docG.getObject(myshape.Name).LineColor
         docG.ActiveObject.PointColor=docG.getObject(myshape.Name).PointColor
         docG.ActiveObject.DiffuseColor=docG.getObject(myshape.Name).DiffuseColor
+        docG.ActiveObject.Transparency=docG.getObject(myshape.Name).Transparency
         if RHDockWidget.ui.checkBox_keep_original.isChecked():
             docG.getObject(myshape.Name).Visibility=False
         else:
             doc.removeObject(myshape.Name)
         if RHDockWidget.ui.checkBox_Refine.isChecked():
             mysolidr.Label = original_label # + "_refined"
+        else:
+            mysolidr.Label = original_label
         #mysolidr.hide()
         #docG.getObject(mysolidr.Name).Visibility=False
         #rh_edges = []; rh_edges_names = []; created_faces = []
@@ -1290,6 +1313,11 @@ def cleaningFaces_RH():
                 doc.addObject('Part::Feature','Solid').Shape=_
             mysolidr = doc.ActiveObject
             original_label = myshape.Label
+            docG.ActiveObject.ShapeColor=docG.getObject(myshape.Name).ShapeColor
+            docG.ActiveObject.LineColor=docG.getObject(myshape.Name).LineColor
+            docG.ActiveObject.PointColor=docG.getObject(myshape.Name).PointColor
+            docG.ActiveObject.DiffuseColor=docG.getObject(myshape.Name).DiffuseColor
+            docG.ActiveObject.Transparency=docG.getObject(myshape.Name).Transparency            
             if RHDockWidget.ui.checkBox_keep_original.isChecked():
                 docG.getObject(myshape.Name).Visibility=False
             else:
@@ -1300,7 +1328,7 @@ def cleaningFaces_RH():
             for fn in new_faces:
                 FreeCADGui.Selection.addSelection(fn)
         FreeCADGui.Selection.removeSelection(myshape)
-        merge_faces_from_selected_objects_RH()
+        merge_faces_from_selected_objects_RH(myshape)
         #for w in fcs_outW:
         #    s=w.copy();Part.show(s)
         
@@ -1436,6 +1464,7 @@ def PartDefeaturing_RH():
             docG.ActiveObject.LineColor=docG.getObject(rh_obj[0].Name).LineColor
             docG.ActiveObject.PointColor=docG.getObject(rh_obj[0].Name).PointColor
             docG.ActiveObject.DiffuseColor=docG.getObject(rh_obj[0].Name).DiffuseColor
+            docG.ActiveObject.Transparency=docG.getObject(rh_obj[0].Name).Transparency
         else:
             FreeCAD.Console.PrintError('Defeaturing failed\n')
         doc.recompute()
@@ -1920,6 +1949,7 @@ class Ui_DockWidget(object):
         self.PB_CFaces.setIconSize(QtCore.QSize(btn_sizeX,btn_sizeY))
         self.PB_CFaces.setIcon(QtGui.QIcon(pm))
         self.PB_CFaces.clicked.connect(copyFaces_RH)
+        self.PB_CFaces.setToolTip("copy Faces from \'in List\' Faces")
         self.checkBox_keep_original.setChecked(True)
         self.checkBox_keep_faces.setChecked(False)
         pm = QtGui.QPixmap()
