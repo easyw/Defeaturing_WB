@@ -736,6 +736,54 @@ holes and merging Outwire</string>
      <string notr="true"/>
     </property>
    </widget>
+   <widget class="QPushButton" name="PB_Connect">
+    <property name="geometry">
+     <rect>
+      <x>172</x>
+      <y>360</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">connect</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_SimpleCopy">
+    <property name="geometry">
+     <rect>
+      <x>172</x>
+      <y>396</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">simple copy</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_resetPlacement">
+    <property name="geometry">
+     <rect>
+      <x>68</x>
+      <y>468</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string notr="true">reset Placement</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
