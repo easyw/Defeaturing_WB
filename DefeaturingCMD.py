@@ -20,6 +20,7 @@ import dft_locator
 
 from PathScripts.PathUtils import horizontalEdgeLoop
 from PathScripts.PathUtils import horizontalFaceLoop
+from PathScripts.PathUtils import loopdetect
 
 reload_Gui=False#True
 
