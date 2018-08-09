@@ -18,9 +18,12 @@ from PySide import QtGui
 import dft_locator
 
 
-from PathScripts.PathUtils import horizontalEdgeLoop
-from PathScripts.PathUtils import horizontalFaceLoop
-from PathScripts.PathUtils import loopdetect
+try:
+    from PathScripts.PathUtils import horizontalEdgeLoop
+    from PathScripts.PathUtils import horizontalFaceLoop
+    from PathScripts.PathUtils import loopdetect
+except:
+    FreeCAD.Console.PrintError('Path WB not found\n')
 
 reload_Gui=False#True
 

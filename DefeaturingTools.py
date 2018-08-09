@@ -22,10 +22,13 @@ import re, os, sys
 import OpenSCADCommands, OpenSCAD2Dgeom, OpenSCADFeatures
 from PySide import QtCore, QtGui
 import tempfile
-from PathScripts.PathUtils import horizontalEdgeLoop
-from PathScripts.PathUtils import horizontalFaceLoop
-from PathScripts.PathUtils import loopdetect
-
+try:
+    from PathScripts.PathUtils import horizontalEdgeLoop
+    from PathScripts.PathUtils import horizontalFaceLoop
+    from PathScripts.PathUtils import loopdetect
+except:
+    FreeCAD.Console.PrintError('Path WB not found\n')
+    
 #int(re.search(r'\d+', string1).group())
 
 global rh_edges, rh_faces, rh_obj
@@ -33,7 +36,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.2.9"
+__version__ = "v1.3.0"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
