@@ -19,7 +19,7 @@ DWB_wb_version='v 1.1.2'
 global myurlDWB
 myurlDWB='https://github.com/easyw/Defeaturing_WB'
 global mycommitsDWB
-mycommitsDWB=35 #v 1.1.2
+mycommitsDWB=36 #v 1.1.2
 
 
 import FreeCAD, FreeCADGui, Part, os, sys

@@ -2318,6 +2318,37 @@ def dock_right_RH():
     #RHDockWidget.resize(sizeXright,sizeYright)
     RHDockWidget.activateWindow()
     RHDockWidget.raise_()
+    t=FreeCADGui.getMainWindow()
+    cv = t.findChild(QtGui.QDockWidget, "kicadStepUp")
+    if cv is None:
+        cv = t.findChild(QtGui.QDockWidget, "Aligner")
+    if cv is None:
+        cv = t.findChild(QtGui.QDockWidget, "Mover")
+    if cv is None:
+        cv = t.findChild(QtGui.QDockWidget, "Caliper")
+    #if cv is None:
+    #    cv = t.findChild(QtGui.QDockWidget, "Python view")
+    #if cv is None:
+    #    cv = t.findChild(QtGui.QDockWidget, "Report view")
+    if RHDockWidget and cv:
+        dw=t.findChildren(QtGui.QDockWidget)
+        try:
+            t.tabifyDockWidget(cv,RHDockWidget)                
+        except:
+            pass
+        d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
+        d_tab.activateWindow()
+        d_tab.raise_()
+        RHDockWidget.showMaximized()
+        RHDockWidget.activateWindow()
+        RHDockWidget.raise_()
+        i_say( "Tabified done !")               
+        d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
+        if d_tab:
+            #KSUWidget.resize(sizeX,sizeY)
+            d_tab.activateWindow()
+            d_tab.raise_()
+    
 def dock_left_RH():
     RHmw = FreeCADGui.getMainWindow()
     RHmw.addDockWidget(QtCore.Qt.LeftDockWidgetArea,RHDockWidget)
