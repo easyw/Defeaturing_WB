@@ -36,7 +36,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.3.0"
+__version__ = "v1.3.1"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -2313,42 +2313,55 @@ def RH_singleInstance():
 
 def dock_right_RH():
     RHmw = FreeCADGui.getMainWindow()
+    t=FreeCADGui.getMainWindow()
+    dw=t.findChildren(QtGui.QDockWidget)
+    looping=False
+    ldw=len (dw)
+    if ldw>0:
+        looping=True
+    idw=0
+    cv=None
+    while looping and idw < ldw:
+    #for d in dw:
+        d=dw[idw]
+        idw+=1
+        area = t.dockWidgetArea(d)
+        #if area == QtCore.Qt.LeftDockWidgetArea:
+        #    print (d.windowTitle(), '(Left)')
+        if area == QtCore.Qt.RightDockWidgetArea:
+            print (d.windowTitle(), '(Right)')
+            r_w=str(d.objectName()) #;print(r_w)
+            cv = t.findChild(QtGui.QDockWidget, r_w)
+            looping=False
     RHmw.addDockWidget(QtCore.Qt.RightDockWidgetArea,RHDockWidget)
     RHDockWidget.setFloating(False)  #dock
     #RHDockWidget.resize(sizeXright,sizeYright)
     RHDockWidget.activateWindow()
     RHDockWidget.raise_()
-    t=FreeCADGui.getMainWindow()
-    cv = t.findChild(QtGui.QDockWidget, "kicadStepUp")
-    if cv is None:
-        cv = t.findChild(QtGui.QDockWidget, "Aligner")
-    if cv is None:
-        cv = t.findChild(QtGui.QDockWidget, "Mover")
-    if cv is None:
-        cv = t.findChild(QtGui.QDockWidget, "Caliper")
-    #if cv is None:
-    #    cv = t.findChild(QtGui.QDockWidget, "Python view")
-    #if cv is None:
-    #    cv = t.findChild(QtGui.QDockWidget, "Report view")
-    if RHDockWidget and cv:
+    if RHDockWidget and cv is not None:
         dw=t.findChildren(QtGui.QDockWidget)
+        #t.tabifyDockWidget(cv,RHDockWidget)
         try:
-            t.tabifyDockWidget(cv,RHDockWidget)                
+            t.tabifyDockWidget(cv,RHDockWidget)
+            i_say( "Tabified done !")               
+            #stop
         except:
+            i_say('exception raised')
             pass
-        d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
-        d_tab.activateWindow()
-        d_tab.raise_()
-        RHDockWidget.showMaximized()
-        RHDockWidget.activateWindow()
-        RHDockWidget.raise_()
-        i_say( "Tabified done !")               
-        d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
-        if d_tab:
-            #KSUWidget.resize(sizeX,sizeY)
-            d_tab.activateWindow()
-            d_tab.raise_()
     
+        # d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
+        # d_tab.activateWindow()
+        # d_tab.raise_()
+        # RHDockWidget.showMaximized()
+        # RHDockWidget.activateWindow()
+        # RHDockWidget.raise_()
+        # i_say( "Tabified done !")               
+        # d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
+        # if d_tab:
+        #     #KSUWidget.resize(sizeX,sizeY)
+        #     d_tab.activateWindow()
+        #     d_tab.raise_()
+##
 def dock_left_RH():
     RHmw = FreeCADGui.getMainWindow()
     RHmw.addDockWidget(QtCore.Qt.LeftDockWidgetArea,RHDockWidget)
@@ -2367,22 +2380,24 @@ def dock_left_RH():
     if RHDockWidget and cv:
         dw=t.findChildren(QtGui.QDockWidget)
         try:
-            t.tabifyDockWidget(cv,RHDockWidget)                
+            t.tabifyDockWidget(cv,RHDockWidget)
+            i_say( "Tabified done !")              
         except:
+            i_say('exception raised')
             pass
-        d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
-        d_tab.activateWindow()
-        d_tab.raise_()
-        RHDockWidget.showMaximized()
-        RHDockWidget.activateWindow()
-        RHDockWidget.raise_()
-        i_say( "Tabified done !")               
-        d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
-        if d_tab:
-            #KSUWidget.resize(sizeX,sizeY)
-            d_tab.activateWindow()
-            d_tab.raise_()
-        #say ("focus on me!")
+    #d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
+    #d_tab.activateWindow()
+    #d_tab.raise_()
+    #RHDockWidget.showMaximized()
+    #RHDockWidget.activateWindow()
+    #RHDockWidget.raise_()
+    #i_say( "Tabified done !")               
+    #d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
+    #if d_tab:
+    #    #KSUWidget.resize(sizeX,sizeY)
+    #    d_tab.activateWindow()
+    #    d_tab.raise_()
+    ##say ("focus on me!")
 ##
 def RH_centerOnScreen (widg):
     '''centerOnScreen()
@@ -2455,7 +2470,10 @@ if RH_singleInstance():
         if (int(OCCMV)>= 7) and (int(OCCmV)>= 3):
             RHDockWidget.ui.PB_PartDefeaturing.setVisible(True)
             RHDockWidget.ui.PB_PartDefeaturing.setEnabled(True)
-    
+#raising up
+RHDockWidget.activateWindow()
+RHDockWidget.raise_()
+        
     # print (instance_nbr)
     # if instance_nbr >1:
     #     RH_killInstance()
