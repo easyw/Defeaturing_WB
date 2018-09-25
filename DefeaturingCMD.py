@@ -14,7 +14,7 @@ import FreeCAD,FreeCADGui
 import FreeCAD, FreeCADGui, Part, os
 import imp, os, sys, tempfile
 import FreeCAD, FreeCADGui
-from PySide import QtGui
+from PySide import QtGui, QtCore
 import dft_locator
 
 
@@ -37,7 +37,41 @@ def reload_lib(lib):
 DefeaturingWBpath = os.path.dirname(dft_locator.__file__)
 DefeaturingWB_icons_path =  os.path.join( DefeaturingWBpath, 'Resources', 'icons')
 
+class DefeatShapeFeature:
+    def IsActive(self):
+        #print ('isactive')
+        return FreeCADGui.Selection.countObjectsOfType('Part::Feature') > 0
 
+    def Activated(self):
+    #def execute():
+        import Part, DefeaturingFeature
+        #print ('activated')
+        selection=FreeCADGui.Selection.getSelectionEx()
+        rh_faces = [];rh_faces_names=[]
+        selEx=FreeCADGui.Selection.getSelectionEx()
+        if len (selEx) > 0:
+            for selFace in selEx:
+                for i,f in enumerate(selFace.SubObjects):
+                    if 'Face' in selFace.SubElementNames[i]:
+                        rh_faces.append(f)
+                        rh_faces_names.append(selFace.ObjectName+'.'+selFace.SubElementNames[i])
+                        print(selFace.ObjectName+'.'+selFace.SubElementNames[i])
+            #print (len(rh_faces))
+            for selobj in selection:
+                newobj=selobj.Document.addObject("Part::FeaturePython",'defeat')
+                DefeaturingFeature.DefeatShape(rh_faces_names,newobj,selobj.Object)
+                DefeaturingFeature.ViewProviderTree(newobj.ViewObject)
+                newobj.Label='defeat_%s' % selobj.Object.Label
+                selobj.Object.ViewObject.hide()
+            FreeCAD.ActiveDocument.recompute()
+    def GetResources(self):
+        return {'Pixmap'  : os.path.join(DefeaturingWB_icons_path,'DefeaturingParametric.svg'), 'MenuText': \
+                QtCore.QT_TRANSLATE_NOOP('DefeatShapeFeature',\
+                'Defeat Shape Feature'), 'ToolTip': \
+                QtCore.QT_TRANSLATE_NOOP('DefeatShapeFeature',\
+                'Create Defeat Shape Parametric Feature')}
+FreeCADGui.addCommand('DefeatShapeFeature',DefeatShapeFeature())
+##
 
 class DefeaturingTools:
     "defeaturing tools object"

@@ -15,11 +15,11 @@
 #    for detail see the LICENCE text file.                                  *
 #****************************************************************************
 
-DWB_wb_version='v 1.1.2'
+DWB_wb_version='v 1.1.3'
 global myurlDWB
 myurlDWB='https://github.com/easyw/Defeaturing_WB'
 global mycommitsDWB
-mycommitsDWB=37 #v 1.1.2
+mycommitsDWB=39 #v 1.1.3
 
 
 import FreeCAD, FreeCADGui, Part, os, sys
@@ -61,7 +61,7 @@ class DefeaturingWB ( Workbench ):
     
     def Initialize(self):
         
-        self.appendToolbar("Defeaturing Tools", ["DefeaturingTools","DF_SelectLoop"])
+        self.appendToolbar("Defeaturing Tools", ["DefeaturingTools","DF_SelectLoop", "DefeatShapeFeature"])
         
         #self.appendMenu("ksu Tools", ["ksuTools","ksuToolsEdit"])
         self.appendMenu("Defeaturing Tools", ["DefeaturingTools","DF_SelectLoop"])
