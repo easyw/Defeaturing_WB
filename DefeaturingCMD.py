@@ -43,7 +43,7 @@ class DefeatShapeFeature:
             OCCMV = Part.OCC_VERSION.split('.')[0]
             OCCmV = Part.OCC_VERSION.split('.')[1]
             if (int(OCCMV)>= 7) and (int(OCCmV)>= 3):
-                return FreeCADGui.Selection.countObjectsOfType('Part::Feature') > 0
+                return FreeCADGui.Selection.countObjectsOfType('Part::Feature') + FreeCADGui.Selection.countObjectsOfType('PartDesign::Feature') > 0
         else:
             return False
 
