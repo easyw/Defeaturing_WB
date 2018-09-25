@@ -10,7 +10,6 @@
 #*  Kicad STEPUP (TM) is a TradeMark and cannot be freely useable           *
 #*                                                                          *
 
-import FreeCAD,FreeCADGui
 import FreeCAD, FreeCADGui, Part, os
 import imp, os, sys, tempfile
 import FreeCAD, FreeCADGui
@@ -40,7 +39,13 @@ DefeaturingWB_icons_path =  os.path.join( DefeaturingWBpath, 'Resources', 'icons
 class DefeatShapeFeature:
     def IsActive(self):
         #print ('isactive')
-        return FreeCADGui.Selection.countObjectsOfType('Part::Feature') > 0
+        if hasattr(Part, "OCC_VERSION"):
+            OCCMV = Part.OCC_VERSION.split('.')[0]
+            OCCmV = Part.OCC_VERSION.split('.')[1]
+            if (int(OCCMV)>= 7) and (int(OCCmV)>= 3):
+                return FreeCADGui.Selection.countObjectsOfType('Part::Feature') > 0
+        else:
+            return False
 
     def Activated(self):
     #def execute():
