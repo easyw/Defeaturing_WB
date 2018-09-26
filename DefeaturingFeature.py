@@ -78,14 +78,26 @@ class ViewProviderTree:
 class DefeatShape:
     '''return a refined shape'''
     def __init__(self, fc, obj, child=None):
+        import FreeCAD
+        doc = FreeCAD.ActiveDocument
         obj.addProperty("App::PropertyLink","Base","Base",
                         "The base object that must be defeatured")
         obj.Proxy = self
         obj.Base = child
         obj.addProperty("App::PropertyStringList","Faces","dFaces",
                         "List of Faces to be defeatured")
+        obj.addProperty("App::PropertyStringList","CM","dFaces",
+                        "Center of Mass")
         #print(fc)
         obj.Faces = fc
+        cm = []
+        for f in fc:    
+            oname = obj.Base.Name #f.split('.')[0]
+            o = doc.getObject(oname)
+            fnbr = int(f.split('.')[1].strip('Face'))-1
+            mf = o.Shape.Faces[fnbr]
+            cm.append('x='+"{0:.3f}".format(mf.CenterOfMass.x)+' y='+"{0:.3f}".format(mf.CenterOfMass.y)+' z='+"{0:.3f}".format(mf.CenterOfMass.z))
+        obj.CM = cm
 
     def onChanged(self, fp, prop):
         "Do something when a property has changed"
@@ -99,23 +111,42 @@ class DefeatShape:
             #print (fp.Faces)
             # rh_faces_names -> (selFace.ObjectName+'.'+selFace.SubElementNames[i])
             d_faces=[]
-            for fn in fp.Faces:
-                oname = fn.split('.')[0]
-                fnbr = int(fn.split('.')[1].strip('Face'))-1
+            if 0:
+                for fn in fp.Faces:
+                    oname = fn.split('.')[0]
+                    fnbr = int(fn.split('.')[1].strip('Face'))-1
+                    o = doc.getObject(oname)
+                    for i, f in enumerate (o.Shape.Faces):
+                        if i == fnbr:
+                            #print (i)
+                            d_faces.append(f)
+                            print (f.CenterOfMass)
+                            #print (f.hashCode())
+            else:
+                oname = fp.Faces[0].split('.')[0]
                 o = doc.getObject(oname)
-                for i, f in enumerate (o.Shape.Faces):
-                    if i == fnbr:
-                        #print (i)
-                        d_faces.append(f)
-                        #print (f.hashCode())
-            sh = fp.Base.Shape.defeaturing(d_faces)
-            if fp.Base.Shape.isPartner(sh):
+                fc = []
+                for i, c in enumerate(fp.CM):
+                    for j, f in enumerate (fp.Base.Shape.Faces):
+                        if c ==('x='+"{0:.3f}".format(f.CenterOfMass.x)+' y='+"{0:.3f}".format(f.CenterOfMass.y)+' z='+"{0:.3f}".format(f.CenterOfMass.z)):
+                            d_faces.append(f)
+                            print (f.CenterOfMass)
+                            fc.append(str(o.Name)+'.'+'Face'+str(j+1))
+            fp.Faces = fc
+            if len (d_faces) == len (fp.CM):
+                sh = fp.Base.Shape.defeaturing(d_faces)
+                if fp.Base.Shape.isPartner(sh):
+                    FreeCAD.Console.PrintError('Defeaturing failed\n')
+                fp.Shape=OpenSCADUtils.applyPlacement(sh)
+                fp.Label=fp.Label[:fp.Label.rfind('_ERR')]
+                docG.ActiveObject.ShapeColor  =  docG.getObject(fp.Base.Name).ShapeColor
+                docG.ActiveObject.LineColor   =  docG.getObject(fp.Base.Name).LineColor
+                docG.ActiveObject.PointColor  =  docG.getObject(fp.Base.Name).PointColor
+                docG.ActiveObject.DiffuseColor=  docG.getObject(fp.Base.Name).DiffuseColor
+                docG.ActiveObject.Transparency=  docG.getObject(fp.Base.Name).Transparency
+            else:
                 FreeCAD.Console.PrintError('Defeaturing failed\n')
-            fp.Shape=OpenSCADUtils.applyPlacement(sh)
-            docG.ActiveObject.ShapeColor  =  docG.getObject(fp.Base.Name).ShapeColor
-            docG.ActiveObject.LineColor   =  docG.getObject(fp.Base.Name).LineColor
-            docG.ActiveObject.PointColor  =  docG.getObject(fp.Base.Name).PointColor
-            docG.ActiveObject.DiffuseColor=  docG.getObject(fp.Base.Name).DiffuseColor
-            docG.ActiveObject.Transparency=  docG.getObject(fp.Base.Name).Transparency
+                if fp.Label.find('_ERR') == -1:
+                    fp.Label='%s_ERR' % fp.Label
 ##
 
