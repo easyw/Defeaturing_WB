@@ -15,6 +15,12 @@
 #    for detail see the LICENCE text file.                                  *
 #****************************************************************************
 
+import dft_locator, os
+DefeaturingWBpath = os.path.dirname(dft_locator.__file__)
+DefeaturingWB_icons_path =  os.path.join( DefeaturingWBpath, 'Resources', 'icons')
+global defeat_icon
+defeat_icon=os.path.join(DefeaturingWB_icons_path,'DefeaturingParametric.svg')
+
 '''
 This Script includes python Features to represent Defeaturing Operations
 '''
@@ -29,7 +35,29 @@ class ViewProviderTree:
         self.Object = obj.Object
         return
 
+    def getIcon(self):
+        #import osc_locator, os
+        global defeat_icon
+        if isinstance(self.Object.Proxy,DefeatShape):
+            print (defeat_icon)
+            # try: 
+            #     if self.upd: return (defeat_icon)
+            # except: pass
+            return(defeat_icon)
+
     def updateData(self, fp, prop):
+        print (fp.Label)
+        #if fp.Label.find('_ERR') != -1:
+        #    fp.touch()
+        #    #import FreeCAD
+        #    #doc = FreeCAD.ActiveDocument
+        #    #doc.getObject(fp.Name).touch()
+        #    print('touched')
+        #self.getIcon()
+        #try: self.upd
+        #except: self.upd=True
+        #self.upd=not self.upd
+        print('update')
         return
 
     def getDisplayModes(self,obj):
@@ -40,6 +68,10 @@ class ViewProviderTree:
         return mode
 
     def onChanged(self, vp, prop):
+        #self.getIcon()
+        print (prop)
+        #self.getIcon()
+        print('change')
         return
 
     def __getstate__(self):
@@ -64,16 +96,9 @@ class ViewProviderTree:
             objs.extend(self.Object.Components)
         if hasattr(self.Object,"Children"):
             objs.extend(self.Object.Children)
-
         return objs
    
-    def getIcon(self):
-        import dft_locator, os
-        #import osc_locator, os
-        DefeaturingWB_icons_path =  os.path.join( os.path.dirname(dft_locator.__file__), 'Resources', 'icons')
-        if isinstance(self.Object.Proxy,DefeatShape):
-            return(os.path.join(DefeaturingWB_icons_path,'DefeaturingParametric.svg'))
-        
+
 ##
 class DefeatShape:
     '''return a refined shape'''
@@ -104,7 +129,8 @@ class DefeatShape:
         pass
 
     def execute(self, fp):
-        import OpenSCADUtils, FreeCAD, FreeCADGui, Part
+        global defeat_icon
+        import OpenSCADUtils, FreeCAD, FreeCADGui, Part, os
         doc = FreeCAD.ActiveDocument
         docG = FreeCADGui.ActiveDocument
         if fp.Base and fp.Base.Shape.isValid():
@@ -123,7 +149,7 @@ class DefeatShape:
                             print (f.CenterOfMass)
                             #print (f.hashCode())
             else:
-                oname = fp.Faces[0].split('.')[0]
+                oname = fp.Base.Name #fp.Faces[0].split('.')[0]
                 o = doc.getObject(oname)
                 fc = []
                 for i, c in enumerate(fp.CM):
@@ -136,18 +162,29 @@ class DefeatShape:
             if len (d_faces) == len (fp.CM):
                 sh = fp.Base.Shape.defeaturing(d_faces)
                 if fp.Base.Shape.isPartner(sh):
-                    FreeCAD.Console.PrintError('Defeaturing failed\n')
-                fp.Shape=OpenSCADUtils.applyPlacement(sh)
-                if fp.Label.find('_ERR') != -1:
-                    fp.Label=fp.Label[:fp.Label.rfind('_ERR')]
-                docG.ActiveObject.ShapeColor  =  docG.getObject(fp.Base.Name).ShapeColor
-                docG.ActiveObject.LineColor   =  docG.getObject(fp.Base.Name).LineColor
-                docG.ActiveObject.PointColor  =  docG.getObject(fp.Base.Name).PointColor
-                docG.ActiveObject.DiffuseColor=  docG.getObject(fp.Base.Name).DiffuseColor
-                docG.ActiveObject.Transparency=  docG.getObject(fp.Base.Name).Transparency
+                    #fp.touch()
+                    FreeCAD.Console.PrintError('Defeaturing failed 1\n')
+                    defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
+                else:
+                    fp.Shape=OpenSCADUtils.applyPlacement(sh)
+                    if fp.Label.find('_ERR') != -1:
+                        fp.Label=fp.Label[:fp.Label.rfind('_ERR')]
+                    defeat_icon=os.path.join(DefeaturingWB_icons_path,'DefeaturingParametric.svg')
+                    docG.ActiveObject.ShapeColor  =  docG.getObject(fp.Base.Name).ShapeColor
+                    docG.ActiveObject.LineColor   =  docG.getObject(fp.Base.Name).LineColor
+                    docG.ActiveObject.PointColor  =  docG.getObject(fp.Base.Name).PointColor
+                    docG.ActiveObject.DiffuseColor=  docG.getObject(fp.Base.Name).DiffuseColor
+                    docG.ActiveObject.Transparency=  docG.getObject(fp.Base.Name).Transparency
             else:
-                FreeCAD.Console.PrintError('Defeaturing failed\n')
+                defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
+                #fp.touch()
+                FreeCAD.Console.PrintError('Defeaturing failed 2\n')
+                sh = fp.Base.Shape
+                fp.Shape=OpenSCADUtils.applyPlacement(sh)
                 if fp.Label.find('_ERR') == -1:
                     fp.Label='%s_ERR' % fp.Label
+                docG.ActiveObject.ShapeColor  =  (1.00,0.00,0.00)
+                raise Exception('Defeaturing FAILED!')
+            #doc.recompute()
 ##
 
