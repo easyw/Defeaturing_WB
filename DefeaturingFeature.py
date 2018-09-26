@@ -138,7 +138,8 @@ class DefeatShape:
                 if fp.Base.Shape.isPartner(sh):
                     FreeCAD.Console.PrintError('Defeaturing failed\n')
                 fp.Shape=OpenSCADUtils.applyPlacement(sh)
-                fp.Label=fp.Label[:fp.Label.rfind('_ERR')]
+                if fp.Label.find('_ERR') != -1:
+                    fp.Label=fp.Label[:fp.Label.rfind('_ERR')]
                 docG.ActiveObject.ShapeColor  =  docG.getObject(fp.Base.Name).ShapeColor
                 docG.ActiveObject.LineColor   =  docG.getObject(fp.Base.Name).LineColor
                 docG.ActiveObject.PointColor  =  docG.getObject(fp.Base.Name).PointColor
