@@ -171,3 +171,42 @@ class DF_SelectLoop:
 
 if FreeCAD.GuiUp:
     FreeCADGui.addCommand('DF_SelectLoop', DF_SelectLoop())
+##
+class refineFeatureTool:
+    "refine Feature Parametric"
+ 
+    def GetResources(self):
+        return {'Pixmap'  : os.path.join( DefeaturingWB_icons_path , 'RefineShapeFeature.svg') , # the name of a svg file available in the resources
+                     'MenuText': "refine Feature" ,
+                     'ToolTip' : "refine Feature Parametric"}
+ 
+    def IsActive(self):
+        if FreeCADGui.Selection.getSelection() is None:
+            return False
+        else:
+            return True
+ 
+    def Activated(self):
+        import OpenSCADFeatures
+        doc=FreeCAD.ActiveDocument
+        docG = FreeCADGui.ActiveDocument
+        sel=FreeCADGui.Selection.getSelectionEx()
+        if len (sel) > 0:
+            for selobj in sel:
+                if hasattr(selobj.Object,"Shape"):        
+                    newobj=selobj.Document.addObject("Part::FeaturePython",'refined')
+                    OpenSCADFeatures.RefineShape(newobj,selobj.Object)
+                    OpenSCADFeatures.ViewProviderTree(newobj.ViewObject)
+                    ## to do: see if it is possible to conserve colors in refining
+                    ao = FreeCAD.ActiveDocument.ActiveObject
+                    docG.ActiveObject.ShapeColor=docG.getObject(selobj.Object.Name).ShapeColor
+                    docG.ActiveObject.LineColor=docG.getObject(selobj.Object.Name).LineColor
+                    docG.ActiveObject.PointColor=docG.getObject(selobj.Object.Name).PointColor
+                    docG.ActiveObject.DiffuseColor=docG.getObject(selobj.Object.Name).DiffuseColor
+                    docG.ActiveObject.Transparency=docG.getObject(selobj.Object.Name).Transparency
+                    #newobj.Label='r_%s' % selobj.Object.Label
+                    newobj.Label=selobj.Object.Label
+                    selobj.Object.ViewObject.hide()
+            doc.recompute()
+FreeCADGui.addCommand('refineFeatureTool',refineFeatureTool())
+##

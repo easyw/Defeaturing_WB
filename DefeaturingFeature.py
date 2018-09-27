@@ -39,14 +39,14 @@ class ViewProviderTree:
         #import osc_locator, os
         global defeat_icon
         if isinstance(self.Object.Proxy,DefeatShape):
-            print (defeat_icon)
+            #print (defeat_icon)
             # try: 
             #     if self.upd: return (defeat_icon)
             # except: pass
             return(defeat_icon)
 
     def updateData(self, fp, prop):
-        print (fp.Label)
+        #print (fp.Label)
         #if fp.Label.find('_ERR') != -1:
         #    fp.touch()
         #    #import FreeCAD
@@ -57,7 +57,7 @@ class ViewProviderTree:
         #try: self.upd
         #except: self.upd=True
         #self.upd=not self.upd
-        print('update')
+        #print('update')
         return
 
     def getDisplayModes(self,obj):
@@ -69,9 +69,9 @@ class ViewProviderTree:
 
     def onChanged(self, vp, prop):
         #self.getIcon()
-        print (prop)
+        #print (prop)
         #self.getIcon()
-        print('change')
+        #print('change')
         return
 
     def __getstate__(self):
@@ -111,18 +111,18 @@ class DefeatShape:
         obj.Base = child
         obj.addProperty("App::PropertyStringList","Faces","dFaces",
                         "List of Faces to be defeatured")
-        obj.addProperty("App::PropertyStringList","CM","dFaces",
-                        "Center of Mass")
+        #obj.addProperty("App::PropertyStringList","CM","dFaces",
+        #                "Center of Mass")
         #print(fc)
         obj.Faces = fc
-        cm = []
-        for f in fc:    
-            oname = obj.Base.Name #f.split('.')[0]
-            o = doc.getObject(oname)
-            fnbr = int(f.split('.')[1].strip('Face'))-1
-            mf = o.Shape.Faces[fnbr]
-            cm.append('x='+"{0:.3f}".format(mf.CenterOfMass.x)+' y='+"{0:.3f}".format(mf.CenterOfMass.y)+' z='+"{0:.3f}".format(mf.CenterOfMass.z))
-        obj.CM = cm
+        #cm = []
+        #for f in fc:    
+        #    oname = obj.Base.Name #f.split('.')[0]
+        #    o = doc.getObject(oname)
+        #    fnbr = int(f.split('.')[1].strip('Face'))-1
+        #    mf = o.Shape.Faces[fnbr]
+        #    cm.append('x='+"{0:.3f}".format(mf.CenterOfMass.x)+' y='+"{0:.3f}".format(mf.CenterOfMass.y)+' z='+"{0:.3f}".format(mf.CenterOfMass.z))
+        #obj.CM = cm
 
     def onChanged(self, fp, prop):
         "Do something when a property has changed"
@@ -137,7 +137,7 @@ class DefeatShape:
             #print (fp.Faces)
             # rh_faces_names -> (selFace.ObjectName+'.'+selFace.SubElementNames[i])
             d_faces=[]
-            if 0:
+            if 1:
                 for fn in fp.Faces:
                     oname = fn.split('.')[0]
                     fnbr = int(fn.split('.')[1].strip('Face'))-1
@@ -146,7 +146,7 @@ class DefeatShape:
                         if i == fnbr:
                             #print (i)
                             d_faces.append(f)
-                            print (f.CenterOfMass)
+                            #print (f.CenterOfMass)
                             #print (f.hashCode())
             else:
                 oname = fp.Base.Name #fp.Faces[0].split('.')[0]
@@ -158,23 +158,31 @@ class DefeatShape:
                             d_faces.append(f)
                             print (f.CenterOfMass)
                             fc.append(str(o.Name)+'.'+'Face'+str(j+1))
-            fp.Faces = fc
-            if len (d_faces) == len (fp.CM):
+            #fp.Faces = fc
+            if len (d_faces) > 0: #== len (fp.CM):
                 sh = fp.Base.Shape.defeaturing(d_faces)
                 if fp.Base.Shape.isPartner(sh):
                     #fp.touch()
                     FreeCAD.Console.PrintError('Defeaturing failed 1\n')
                     defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
+                    docG.getObject(fp.Name).ShapeColor  =  (1.00,0.00,0.00)
+                    raise NameError('Defeaturing FAILED!')
+                    #try:
+                    #    raise NameError('Defeaturing FAILED!')
+                    #except NameError:
+                    #    print ('Defeaturing FAILED!')
+                    #    raise
+                    #raise Exception('Defeaturing FAILED!')
                 else:
                     fp.Shape=OpenSCADUtils.applyPlacement(sh)
                     if fp.Label.find('_ERR') != -1:
                         fp.Label=fp.Label[:fp.Label.rfind('_ERR')]
                     defeat_icon=os.path.join(DefeaturingWB_icons_path,'DefeaturingParametric.svg')
-                    docG.ActiveObject.ShapeColor  =  docG.getObject(fp.Base.Name).ShapeColor
-                    docG.ActiveObject.LineColor   =  docG.getObject(fp.Base.Name).LineColor
-                    docG.ActiveObject.PointColor  =  docG.getObject(fp.Base.Name).PointColor
-                    docG.ActiveObject.DiffuseColor=  docG.getObject(fp.Base.Name).DiffuseColor
-                    docG.ActiveObject.Transparency=  docG.getObject(fp.Base.Name).Transparency
+                    docG.getObject(fp.Name).ShapeColor  =  docG.getObject(fp.Base.Name).ShapeColor
+                    docG.getObject(fp.Name).LineColor   =  docG.getObject(fp.Base.Name).LineColor
+                    docG.getObject(fp.Name).PointColor  =  docG.getObject(fp.Base.Name).PointColor
+                    docG.getObject(fp.Name).DiffuseColor=  docG.getObject(fp.Base.Name).DiffuseColor
+                    docG.getObject(fp.Name).Transparency=  docG.getObject(fp.Base.Name).Transparency
             else:
                 defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
                 #fp.touch()
@@ -183,7 +191,7 @@ class DefeatShape:
                 fp.Shape=OpenSCADUtils.applyPlacement(sh)
                 if fp.Label.find('_ERR') == -1:
                     fp.Label='%s_ERR' % fp.Label
-                docG.ActiveObject.ShapeColor  =  (1.00,0.00,0.00)
+                docG.getObject(fp.Name).ShapeColor  =  (1.00,0.00,0.00)
                 raise Exception('Defeaturing FAILED!')
             #doc.recompute()
 ##
