@@ -181,9 +181,7 @@ class refineFeatureTool:
                      'ToolTip' : "refine Feature Parametric"}
  
     def IsActive(self):
-        if FreeCADGui.Selection.getSelection() is None:
-            return False
-        else:
+        if len(FreeCADGui.Selection.getSelection()) > 0:
             return True
  
     def Activated(self):
