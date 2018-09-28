@@ -135,7 +135,9 @@ class DefeatShape:
         import FreeCAD
         doc = FreeCAD.ActiveDocument
         d_faces=[]
-        if prop == 'useFaceNbr':
+        #print (prop,' changed')
+        if (prop == 'useFaceNbr' or prop == 'Shape') and len (fp.Base.Shape.Faces) > 0:
+            #print (fp.useFaceNbr)
             if fp.useFaceNbr: #not use_cm:
                 cm_list=[]
                 for fn in fp.Faces:
@@ -154,17 +156,21 @@ class DefeatShape:
                             #print (f.hashCode())
                     fp.CM = cm_list        
             else:
-                fc = []
-                #fc.append(fp.Faces[0])
-                for i, c in enumerate(fp.CM):
-                    for j, f in enumerate (fp.Base.Shape.Faces):
-                            if c ==('x='+"{0:.3f}".format(f.CenterOfMass.x)+' y='+"{0:.3f}".format(f.CenterOfMass.y)+' z='+"{0:.3f}".format(f.CenterOfMass.z)):
-                                d_faces.append(f)
-                                #print (f.CenterOfMass)
-                                fc.append(str(fp.Base.Name)+'.'+'Face'+str(j+1))
-                fp.Faces = fc
-            doc.recompute()
-        #print (prop,' changed')
+                #print(fp.Base.Shape.Faces)
+                if len (fp.Base.Shape.Faces) > 0:
+                #if fp.Base.Shape.isValid():
+                    fc = []
+                    #fc.append(fp.Faces[0])
+                    for i, c in enumerate(fp.CM):
+                        for j, f in enumerate (fp.Base.Shape.Faces):
+                                if c ==('x='+"{0:.3f}".format(f.CenterOfMass.x)+' y='+"{0:.3f}".format(f.CenterOfMass.y)+' z='+"{0:.3f}".format(f.CenterOfMass.z)):
+                                    d_faces.append(f)
+                                    #print (f.CenterOfMass)
+                                    fc.append(str(fp.Base.Name)+'.'+'Face'+str(j+1))
+                    fp.Faces = fc
+                else:
+                    print('loading first time')
+            #doc.recompute()
         pass
 
     def execute(self, fp):
@@ -172,79 +178,84 @@ class DefeatShape:
         import OpenSCADUtils, FreeCAD, FreeCADGui, Part, os
         doc = FreeCAD.ActiveDocument
         docG = FreeCADGui.ActiveDocument
-        if fp.Base and fp.Base.Shape.isValid():
-            #print (fp.Faces)
-            # rh_faces_names -> (selFace.ObjectName+'.'+selFace.SubElementNames[i])
-            d_faces=[]
-            if fp.useFaceNbr: #not use_cm:
-                cm_list=[]
-                for fn in fp.Faces:
-                    oname = fp.Base.Name #fp.Faces[0].split('.')[0]
-                    fnbr = int(fn.split('.')[1].strip('Face'))-1
-                    o = doc.getObject(oname)
-                    for i, f in enumerate (o.Shape.Faces):
-                        if i == fnbr:
-                            #print (i)
-                            d_faces.append(f)
-                            c='x='+"{0:.3f}".format(f.CenterOfMass.x)+' y='+"{0:.3f}".format(f.CenterOfMass.y)+' z='+"{0:.3f}".format(f.CenterOfMass.z)
-                            cm_list.append(c)
-                            #print (c)
-                            #print(fp.CM)
-                            #print (f.CenterOfMass)
-                            #print (f.hashCode())
-                    fp.CM = cm_list
-            else:
-                oname = fp.Base.Name #fp.Faces[0].split('.')[0]
-                o = doc.getObject(oname)
-                fc = []
-                #fc.append(fp.Faces[0])
-                for i, c in enumerate(fp.CM):
-                    for j, f in enumerate (fp.Base.Shape.Faces):
-                            if c ==('x='+"{0:.3f}".format(f.CenterOfMass.x)+' y='+"{0:.3f}".format(f.CenterOfMass.y)+' z='+"{0:.3f}".format(f.CenterOfMass.z)):
+        #print(fp.Base.Shape.Faces)
+        #if 0: #
+        if len (fp.Faces) > 0:
+            if fp.Base and fp.Base.Shape.isValid():
+                #print (fp.Faces)
+                # rh_faces_names -> (selFace.ObjectName+'.'+selFace.SubElementNames[i])
+                d_faces=[]
+                if fp.useFaceNbr: #not use_cm:
+                    cm_list=[]
+                    for fn in fp.Faces:
+                        oname = fp.Base.Name #fp.Faces[0].split('.')[0]
+                        fnbr = int(fn.split('.')[1].strip('Face'))-1
+                        o = doc.getObject(oname)
+                        for i, f in enumerate (o.Shape.Faces):
+                            if i == fnbr:
+                                #print (i)
                                 d_faces.append(f)
+                                c='x='+"{0:.3f}".format(f.CenterOfMass.x)+' y='+"{0:.3f}".format(f.CenterOfMass.y)+' z='+"{0:.3f}".format(f.CenterOfMass.z)
+                                cm_list.append(c)
+                                #print (c)
+                                #print(fp.CM)
                                 #print (f.CenterOfMass)
-                                fc.append(str(o.Name)+'.'+'Face'+str(j+1))
-            #fp.Faces = fc
-            check_faces = True
-            if not fp.useFaceNbr: #use_cm:
-                if len (d_faces) != len (fp.CM):
-                    check_faces = False
-            elif len (d_faces) == 0:
-                check_faces = False
-            if check_faces:
-                sh = fp.Base.Shape.defeaturing(d_faces)
-                if fp.Base.Shape.isPartner(sh):
-                    #fp.touch()
-                    FreeCAD.Console.PrintError('Defeaturing failed 1\n')
-                    defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
-                    docG.getObject(fp.Name).ShapeColor  =  (1.00,0.00,0.00)
-                    raise NameError('Defeaturing FAILED!')
-                    #try:
-                    #    raise NameError('Defeaturing FAILED!')
-                    #except NameError:
-                    #    print ('Defeaturing FAILED!')
-                    #    raise
-                    #raise Exception('Defeaturing FAILED!')
+                                #print (f.hashCode())
+                        fp.CM = cm_list
                 else:
+                    oname = fp.Base.Name #fp.Faces[0].split('.')[0]
+                    o = doc.getObject(oname)
+                    fc = []
+                    #fc.append(fp.Faces[0])
+                    for i, c in enumerate(fp.CM):
+                        for j, f in enumerate (fp.Base.Shape.Faces):
+                                if c ==('x='+"{0:.3f}".format(f.CenterOfMass.x)+' y='+"{0:.3f}".format(f.CenterOfMass.y)+' z='+"{0:.3f}".format(f.CenterOfMass.z)):
+                                    d_faces.append(f)
+                                    #print (f.CenterOfMass)
+                                    fc.append(str(o.Name)+'.'+'Face'+str(j+1))
+                #fp.Faces = fc
+                check_faces = True
+                if not fp.useFaceNbr: #use_cm:
+                    if len (d_faces) != len (fp.CM):
+                        check_faces = False
+                elif len (d_faces) == 0:
+                    check_faces = False
+                if check_faces:
+                    sh = fp.Base.Shape.defeaturing(d_faces)
+                    if fp.Base.Shape.isPartner(sh):
+                        #fp.touch()
+                        FreeCAD.Console.PrintError('Defeaturing failed 1\n')
+                        defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
+                        docG.getObject(fp.Name).ShapeColor  =  (1.00,0.00,0.00)
+                        raise NameError('Defeaturing FAILED!')
+                        #try:
+                        #    raise NameError('Defeaturing FAILED!')
+                        #except NameError:
+                        #    print ('Defeaturing FAILED!')
+                        #    raise
+                        #raise Exception('Defeaturing FAILED!')
+                    else:
+                        fp.Shape=OpenSCADUtils.applyPlacement(sh)
+                        if fp.Label.find('_ERR') != -1:
+                            fp.Label=fp.Label[:fp.Label.rfind('_ERR')]
+                        defeat_icon=os.path.join(DefeaturingWB_icons_path,'DefeaturingParametric.svg')
+                        docG.getObject(fp.Name).ShapeColor  =  docG.getObject(fp.Base.Name).ShapeColor
+                        docG.getObject(fp.Name).LineColor   =  docG.getObject(fp.Base.Name).LineColor
+                        docG.getObject(fp.Name).PointColor  =  docG.getObject(fp.Base.Name).PointColor
+                        docG.getObject(fp.Name).DiffuseColor=  docG.getObject(fp.Base.Name).DiffuseColor
+                        docG.getObject(fp.Name).Transparency=  docG.getObject(fp.Base.Name).Transparency
+                else:
+                    defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
+                    #fp.touch()
+                    FreeCAD.Console.PrintError('Defeaturing failed 2\n')
+                    sh = fp.Base.Shape
                     fp.Shape=OpenSCADUtils.applyPlacement(sh)
-                    if fp.Label.find('_ERR') != -1:
-                        fp.Label=fp.Label[:fp.Label.rfind('_ERR')]
-                    defeat_icon=os.path.join(DefeaturingWB_icons_path,'DefeaturingParametric.svg')
-                    docG.getObject(fp.Name).ShapeColor  =  docG.getObject(fp.Base.Name).ShapeColor
-                    docG.getObject(fp.Name).LineColor   =  docG.getObject(fp.Base.Name).LineColor
-                    docG.getObject(fp.Name).PointColor  =  docG.getObject(fp.Base.Name).PointColor
-                    docG.getObject(fp.Name).DiffuseColor=  docG.getObject(fp.Base.Name).DiffuseColor
-                    docG.getObject(fp.Name).Transparency=  docG.getObject(fp.Base.Name).Transparency
-            else:
-                defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
-                #fp.touch()
-                FreeCAD.Console.PrintError('Defeaturing failed 2\n')
-                sh = fp.Base.Shape
-                fp.Shape=OpenSCADUtils.applyPlacement(sh)
-                if fp.Label.find('_ERR') == -1:
-                    fp.Label='%s_ERR' % fp.Label
-                docG.getObject(fp.Name).ShapeColor  =  (1.00,0.00,0.00)
-                raise Exception('Defeaturing FAILED!')
-            #doc.recompute()
+                    if fp.Label.find('_ERR') == -1:
+                        fp.Label='%s_ERR' % fp.Label
+                    docG.getObject(fp.Name).ShapeColor  =  (1.00,0.00,0.00)
+                    raise Exception('Defeaturing FAILED!')
+                #doc.recompute()
+        else:
+            print('first executing')
 ##
 
