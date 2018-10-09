@@ -259,3 +259,31 @@ class DefeatShape:
             print('first executing')
 ##
 
+## class UnionFuzzyShape:
+##     '''return a fuzzy unioned shape'''
+##     def __init__(self, compNames, obj, child=None):
+##         #obj.addProperty("App::PropertyLink","Base","Base",
+##         #                "The base object that must be fuzzy unioned")
+##         obj.addProperty("App::PropertyStringList","Components","Components",
+##                         "List of Objects to be fuzzy unioned")
+##         obj.Proxy = self
+##         obj.Base = child
+##         obj.Components = compNames
+## 
+##     def onChanged(self, fp, prop):
+##         "Do something when a property has changed"
+##         pass
+## 
+##     def execute(self, fp):
+##         if len (fp.Components) > 1:
+##             makeOp=True
+##             for name in fp.Components:
+##                 if not doc.getObject(name).Shape.isValid():
+##                     makeOp=False
+##             if makeOp:
+##                 import OpenSCADUtils, FuzzyTools
+##                 #sh=fp.Base.Shape.removeSplitter()
+##                 ### do my ops
+##                 result_shape = FuzzyTools.fuzzyUnion()
+##                 fp.Shape=OpenSCADUtils.applyPlacement(result_shape)
+## 

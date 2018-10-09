@@ -223,9 +223,9 @@ class FuzzyCut:
             OCCMV = Part.OCC_VERSION.split('.')[0]
             OCCmV = Part.OCC_VERSION.split('.')[1]
             if (int(OCCMV)>= 7) and (int(OCCmV)>= 1):
-                return True
-        elif doc is not None and len(FreeCADGui.Selection.getSelection()) > 1:
-            return True
+                #return True
+                if len(FreeCADGui.Selection.getSelection()) == 2:
+                    return True
         else:
             return False
  
@@ -253,9 +253,9 @@ class FuzzyUnion:
             OCCMV = Part.OCC_VERSION.split('.')[0]
             OCCmV = Part.OCC_VERSION.split('.')[1]
             if (int(OCCMV)>= 7) and (int(OCCmV)>= 1):
-                return True
-        elif doc is not None and len(FreeCADGui.Selection.getSelection()) > 1:
-            return True
+                #return True
+                if len(FreeCADGui.Selection.getSelection()) > 1:
+                    return True
         else:
             return False
 
@@ -282,9 +282,9 @@ class FuzzyCommon:
             OCCMV = Part.OCC_VERSION.split('.')[0]
             OCCmV = Part.OCC_VERSION.split('.')[1]
             if (int(OCCMV)>= 7) and (int(OCCmV)>= 1):
-                return True
-        elif doc is not None and len(FreeCADGui.Selection.getSelection()) > 1:
-            return True
+                #return True
+                if len(FreeCADGui.Selection.getSelection()) > 1:
+                    return True
         else:
             return False
 
