@@ -208,3 +208,92 @@ class refineFeatureTool:
             doc.recompute()
 FreeCADGui.addCommand('refineFeatureTool',refineFeatureTool())
 ##
+
+class FuzzyCut:
+    "Fuzzy boolean Cut"
+ 
+    def GetResources(self):
+        return {'Pixmap'  : os.path.join( DefeaturingWB_icons_path , 'FuzzyCut.svg') , # the name of a svg file available in the resources
+                     'MenuText': "Fuzzy boolean Cut" ,
+                     'ToolTip' : "Fuzzy boolean Cut"}
+ 
+    def IsActive(self):
+        doc = FreeCAD.ActiveDocument
+        if hasattr(Part, "OCC_VERSION"):
+            OCCMV = Part.OCC_VERSION.split('.')[0]
+            OCCmV = Part.OCC_VERSION.split('.')[1]
+            if (int(OCCMV)>= 7) and (int(OCCmV)>= 1):
+                return True
+        elif doc is not None and len(FreeCADGui.Selection.getSelection()) > 1:
+            return True
+        else:
+            return False
+ 
+    def Activated(self):
+        # do something here...
+        import FuzzyTools
+        reload_lib(FuzzyTools)
+        FuzzyTools.fuzzyCut()
+        # FreeCAD.Console.PrintWarning( 'Fuzzy Boolean Tools active :)\n' )
+ 
+FreeCADGui.addCommand('FuzzyCut',FuzzyCut())
+##
+
+class FuzzyUnion:
+    "Fuzzy boolean Union"
+ 
+    def GetResources(self):
+        return {'Pixmap'  : os.path.join( DefeaturingWB_icons_path , 'FuzzyUnion.svg') , # the name of a svg file available in the resources
+                     'MenuText': "Fuzzy boolean Union" ,
+                     'ToolTip' : "Fuzzy boolean Union"}
+ 
+    def IsActive(self):
+        doc = FreeCAD.ActiveDocument
+        if hasattr(Part, "OCC_VERSION"):
+            OCCMV = Part.OCC_VERSION.split('.')[0]
+            OCCmV = Part.OCC_VERSION.split('.')[1]
+            if (int(OCCMV)>= 7) and (int(OCCmV)>= 1):
+                return True
+        elif doc is not None and len(FreeCADGui.Selection.getSelection()) > 1:
+            return True
+        else:
+            return False
+
+    def Activated(self):
+        # do something here...
+        import FuzzyTools
+        reload_lib(FuzzyTools)
+        FuzzyTools.fuzzyUnion()
+        # FreeCAD.Console.PrintWarning( 'Fuzzy Boolean Tools active :)\n' )
+ 
+FreeCADGui.addCommand('FuzzyUnion',FuzzyUnion())
+##
+class FuzzyCommon:
+    "Fuzzy boolean Common"
+ 
+    def GetResources(self):
+        return {'Pixmap'  : os.path.join( DefeaturingWB_icons_path , 'FuzzyCommon.svg') , # the name of a svg file available in the resources
+                     'MenuText': "Fuzzy boolean Common" ,
+                     'ToolTip' : "Fuzzy boolean Common"}
+ 
+    def IsActive(self):
+        doc = FreeCAD.ActiveDocument
+        if hasattr(Part, "OCC_VERSION"):
+            OCCMV = Part.OCC_VERSION.split('.')[0]
+            OCCmV = Part.OCC_VERSION.split('.')[1]
+            if (int(OCCMV)>= 7) and (int(OCCmV)>= 1):
+                return True
+        elif doc is not None and len(FreeCADGui.Selection.getSelection()) > 1:
+            return True
+        else:
+            return False
+
+    def Activated(self):
+        # do something here...
+        import FuzzyTools
+        reload_lib(FuzzyTools)
+        FuzzyTools.fuzzyCommon()
+        # FreeCAD.Console.PrintWarning( 'Fuzzy Boolean Tools active :)\n' )
+ 
+FreeCADGui.addCommand('FuzzyCommon',FuzzyCommon())
+##

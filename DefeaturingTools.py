@@ -122,8 +122,10 @@ def checking_BOP(o):
         chks=checkBOP(o.Shape)
         if chks is not True:
             i_sayerr('shape \''+o.Name+'\' \''+mk_str(o.Label)+'\' is INVALID!\n')
-            i_sayw(mk_str(chks[0]))
-            if 'No error' in mk_str(chks[0]):
+            #print(str(chks))
+            i_sayw(str(chks))
+            #print (chks) #[0])
+            if 'No error' in str(chks):
                 if len (o.Shape.Shells) > 0:
                     for sh in o.Shape.Shells:
                         try:

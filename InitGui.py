@@ -15,7 +15,7 @@
 #    for detail see the LICENCE text file.                                  *
 #****************************************************************************
 
-DWB_wb_version='v 1.1.4'
+DWB_wb_version='v 1.1.5'
 global myurlDWB
 myurlDWB='https://github.com/easyw/Defeaturing_WB'
 global mycommitsDWB
@@ -65,6 +65,9 @@ class DefeaturingWB ( Workbench ):
         
         #self.appendMenu("ksu Tools", ["ksuTools","ksuToolsEdit"])
         self.appendMenu("Defeaturing Tools", ["refineFeatureTool","DefeaturingTools","DF_SelectLoop"])
+        
+        self.appendToolbar("Fuzzy Tools", ["FuzzyCut","FuzzyUnion","FuzzyCommon"])
+        self.appendMenu("Fuzzy Tools", ["FuzzyCut","FuzzyUnion","FuzzyCommon"])
         
         Log ("Loading Defeaturing Module... done\n")
  
