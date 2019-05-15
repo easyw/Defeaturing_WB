@@ -36,7 +36,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.3.2"
+__version__ = "v1.3.3"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -2335,6 +2335,8 @@ def RH_singleInstance():
 ##
 
 def dock_right_RH():
+    global instance_nbr
+    
     RHmw = FreeCADGui.getMainWindow()
     t=FreeCADGui.getMainWindow()
     dw=t.findChildren(QtGui.QDockWidget)
@@ -2371,7 +2373,9 @@ def dock_right_RH():
         except:
             i_say('exception raised')
             pass
-    
+    if instance_nbr==0:
+        instance_nbr=1
+        dock_right_RH()
         # d_tab = t.findChild(QtGui.QDockWidget, "DefeaturingTools") #"kicad StepUp 3D tools")
         # d_tab.activateWindow()
         # d_tab.raise_()
@@ -2384,6 +2388,7 @@ def dock_right_RH():
         #     #KSUWidget.resize(sizeX,sizeY)
         #     d_tab.activateWindow()
         #     d_tab.raise_()
+
 ##
 def dock_left_RH():
     RHmw = FreeCADGui.getMainWindow()
