@@ -21,7 +21,7 @@ import FreeCAD, FreeCADGui, Draft, Part
 import re, os, sys
 from PySide import QtCore, QtGui
 
-__version__ = "v1.0.1"
+__version__ = "v1.0.2"
 
 def f_say(msg):
     FreeCAD.Console.PrintMessage(msg)
@@ -41,7 +41,7 @@ def fuzzyCut():
     global fuzzyTolerance
     from PySide import QtCore, QtGui
     
-    fuzzyTolerance = 0.1
+    fuzzyTolerance = 0.01
     reply = QtGui.QInputDialog.getText(None, "Tolerance","Fuzzy Tolerance",QtGui.QLineEdit.Normal,str(fuzzyTolerance))
     if reply[1]:
             # user clicked OK
@@ -77,8 +77,7 @@ def fuzzyUnion():
     import Part
     global fuzzyTolerance
     
-    fuzzyTolerance = 0.1
-    fuzzyTolerance = 0.1
+    fuzzyTolerance = 0.01
     reply = QtGui.QInputDialog.getText(None, "Tolerance","Fuzzy Tolerance",QtGui.QLineEdit.Normal,str(fuzzyTolerance))
     if reply[1]:
             # user clicked OK
@@ -108,8 +107,7 @@ def fuzzyCommon():
     import Part
     global fuzzyTolerance
     
-    fuzzyTolerance = 0.1
-    fuzzyTolerance = 0.1
+    fuzzyTolerance = 0.01
     reply = QtGui.QInputDialog.getText(None, "Tolerance","Fuzzy Tolerance",QtGui.QLineEdit.Normal,str(fuzzyTolerance))
     if reply[1]:
             # user clicked OK
