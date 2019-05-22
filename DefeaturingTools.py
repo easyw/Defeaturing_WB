@@ -36,7 +36,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.3.3"
+__version__ = "v1.3.4"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -490,7 +490,8 @@ def merge_faces_from_selected_objects_RH(refobj=None):
     if len (sel):
         for o in sel:
             for f in o.Shape.Faces:
-                faces.append(f) 
+                if f.Area > 0:
+                    faces.append(f) 
         #print faces
         try:
             _ = Part.Shell(faces)
