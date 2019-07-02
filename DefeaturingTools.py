@@ -36,7 +36,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.3.4"
+__version__ = "v1.3.5"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -524,7 +524,7 @@ def merge_faces_from_selected_objects_RH(refobj=None):
         #App.ActiveDocument.ActiveObject.Label=App.ActiveDocument.mysolid.Label
         mysolidr = doc.ActiveObject
         #original_label = rh_obj.Label
-        if refobj is not None:
+        if refobj is not None and hasattr(refobj,'Name'):
             docG.ActiveObject.ShapeColor=docG.getObject(refobj.Name).ShapeColor
             docG.ActiveObject.LineColor=docG.getObject(refobj.Name).LineColor
             docG.ActiveObject.PointColor=docG.getObject(refobj.Name).PointColor
