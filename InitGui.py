@@ -15,11 +15,11 @@
 #    for detail see the LICENCE text file.                                  *
 #****************************************************************************
 
-DWB_wb_version='v 1.1.7'
+DWB_wb_version='v 1.1.8'
 global myurlDWB
 myurlDWB='https://github.com/easyw/Defeaturing_WB'
 global mycommitsDWB
-mycommitsDWB=57 #v 1.1.7
+mycommitsDWB=58 #v 1.1.8
 
 
 import FreeCAD, FreeCADGui, Part, os, sys
@@ -53,7 +53,7 @@ class DefeaturingWB ( Workbench ):
     "Defeaturing WB object"
     Icon = main_DWB_Icon
     #Icon = ":Resources/icons/kicad-StepUp-tools-WB.svg"
-    MenuText = "Defeaturing WB"
+    MenuText = "Defeaturing"
     ToolTip = "Defeaturing workbench"
  
     def GetClassName(self):
