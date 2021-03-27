@@ -1,4 +1,6 @@
 # FreeCAD Defeaturing Workbench
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/easyw/Defeaturing_WB.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/easyw/Defeaturing_WB/alerts/) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/easyw/Defeaturing_WB.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/easyw/Defeaturing_WB/context:python)
+
 A first attempt to a Defeaturing workbench for FreeCAD
 
 #### Developers:
