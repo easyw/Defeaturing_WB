@@ -1886,7 +1886,7 @@ class Ui_DockWidget(object):
         self.checkBox_Refine.setObjectName("checkBox_Refine")
         self.checkBox_keep_faces = QtGui.QCheckBox(self.dockWidgetContents)
         self.checkBox_keep_faces.setGeometry(QtCore.QRect(128, 140, 100, 20))
-        self.checkBox_keep_faces.setToolTip("keep construcion faces")
+        self.checkBox_keep_faces.setToolTip("keep construction faces")
         self.checkBox_keep_faces.setText("keep faces")
         self.checkBox_keep_faces.setObjectName("checkBox_keep_faces")
         self.PB_RFaces = QtGui.QPushButton(self.dockWidgetContents)
