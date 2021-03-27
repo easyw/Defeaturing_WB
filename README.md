@@ -14,6 +14,8 @@ Intended for editing STEP models, removing/adding of selected features from the 
 * Tools to create more solid shape(s), from edge(s), face(s) or shell(s).
 * Possiblity using direct modeling of the model, when the history of operations is unavailable. (This is the case for 3D STEP models).
 * Useful in situations to quickly remove proprietary details of the model before sharing it. See [Defeaturing](https://wiki.freecadweb.org/Defeaturing)
+* More details at [wiki.freecadweb.org/Defeaturing_Workbench](https://wiki.freecadweb.org/Defeaturing_Workbench)
+
 
 ## Prerequisites
 
@@ -31,10 +33,6 @@ Install via the FreeCAD [Addon Manager](https://wiki.freecadweb.org/Std_AddonMgr
 ## Screenshots
 
 ![image](https://user-images.githubusercontent.com/4140247/112375777-117ad380-8cba-11eb-933d-88fa29aa2010.png)
-
-
-## Useful tips
-More details at [wiki.freecadweb.org/Defeaturing_Workbench](https://wiki.freecadweb.org/Defeaturing_Workbench)
 
 
 #### Release notes:
