@@ -245,7 +245,7 @@ after the operation </string>
      </rect>
     </property>
     <property name="toolTip">
-     <string notr="true">keep construcion faces</string>
+     <string notr="true">keep construction faces</string>
     </property>
     <property name="text">
      <string notr="true">keep faces</string>
