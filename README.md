@@ -28,6 +28,11 @@ Install via the FreeCAD [Addon Manager](https://wiki.freecadweb.org/Std_AddonMgr
 
 ![image](https://user-images.githubusercontent.com/4140247/112375777-117ad380-8cba-11eb-933d-88fa29aa2010.png)
 
+
+## Useful tips
+More details at [wiki.freecadweb.org/Defeaturing_Workbench](https://wiki.freecadweb.org/Defeaturing_Workbench)
+
+
 #### Release notes:
 
 * v1.1:     Improve README + typo fixes
