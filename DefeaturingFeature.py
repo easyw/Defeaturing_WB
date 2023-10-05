@@ -225,7 +225,8 @@ class DefeatShape:
                     if fp.Base.Shape.isPartner(sh):
                         #fp.touch()
                         FreeCAD.Console.PrintError('Defeaturing failed 1\n')
-                        defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
+                        #defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
+                        defeat_icon=os.path.join(DefeaturingWB_icons_path,'DefeaturingParametric.svg')
                         docG.getObject(fp.Name).ShapeColor  =  (1.00,0.00,0.00)
                         raise NameError('Defeaturing FAILED!')
                         #try:
@@ -245,7 +246,8 @@ class DefeatShape:
                         docG.getObject(fp.Name).DiffuseColor=  docG.getObject(fp.Base.Name).DiffuseColor
                         docG.getObject(fp.Name).Transparency=  docG.getObject(fp.Base.Name).Transparency
                 else:
-                    defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
+                    #defeat_icon=os.path.join(DefeaturingWB_icons_path,'error.svg')
+                    defeat_icon=os.path.join(DefeaturingWB_icons_path,'DefeaturingParametric.svg')
                     #fp.touch()
                     FreeCAD.Console.PrintError('Defeaturing failed 2\n')
                     sh = fp.Base.Shape

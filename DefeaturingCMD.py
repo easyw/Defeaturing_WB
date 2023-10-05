@@ -58,6 +58,7 @@ class DefeatShapeFeature:
         rh_faces = [];rh_faces_names=[]
         selEx=FreeCADGui.Selection.getSelectionEx()
         if len (selEx) > 0:
+            FreeCAD.ActiveDocument.openTransaction('dft')
             for selFace in selEx:
                 for i,f in enumerate(selFace.SubObjects):
                     if 'Face' in selFace.SubElementNames[i]:
@@ -71,6 +72,7 @@ class DefeatShapeFeature:
                 DefeaturingFeature.ViewProviderTree(newobj.ViewObject)
                 newobj.Label='defeat_%s' % selobj.Object.Label
                 selobj.Object.ViewObject.hide()
+            FreeCAD.ActiveDocument.commitTransaction()
             FreeCAD.ActiveDocument.recompute()
     def GetResources(self):
         return {'Pixmap'  : os.path.join(DefeaturingWB_icons_path,'DefeaturingParametric.svg'), 'MenuText': \

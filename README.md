@@ -1,10 +1,9 @@
 ## FreeCAD Defeaturing Workbench
 
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/easyw/Defeaturing_WB.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/easyw/Defeaturing_WB/alerts/) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/easyw/Defeaturing_WB.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/easyw/Defeaturing_WB/context:python)
+[![made-with-python](Resources/made-with-python.svg)](https://www.python.org/)
 
-
-[![FreeCAD Addokn manager status](https://img.shields.io/badge/FreeCAD%20addon%20manager-available-brightgreen)](https://github.com/FreeCAD/FreeCAD-addons)
+[![FreeCAD Addokn manager status](Resources/FreeCAD-addon-manager-available.svg)](https://www.freecad.org)
 
 Intended for editing STEP models, removing/adding of selected features from the model
 
