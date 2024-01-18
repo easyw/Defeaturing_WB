@@ -11,7 +11,7 @@
 #*                                                                          *
 
 import FreeCAD, FreeCADGui, Part, os
-import imp, os, sys, tempfile
+import os, sys, tempfile
 import FreeCAD, FreeCADGui
 from PySide import QtGui, QtCore
 import dft_locator
