@@ -1813,7 +1813,8 @@ class Ui_DockWidget(object):
         DockWidget.setWindowIcon(icon)
         DockWidget.setToolTip("Defeaturing tools")
         DockWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
-        DockWidget.setFeatures(QtGui.QDockWidget.AllDockWidgetFeatures)
+        if hasattr(QtGui.QDockWidget, "AllDockWidgetFeatures"):
+            DockWidget.setFeatures(QtGui.QDockWidget.AllDockWidgetFeatures)
         DockWidget.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea|QtCore.Qt.RightDockWidgetArea)
         DockWidget.setWindowTitle("Defeaturing Tools")
         self.dockWidgetContents = QtGui.QWidget()
@@ -1913,7 +1914,10 @@ class Ui_DockWidget(object):
         self.PB_check_TypeId = QtGui.QPushButton(self.dockWidgetContents)
         self.PB_check_TypeId.setGeometry(QtCore.QRect(124, 468, 32, 32))
         font = QtGui.QFont()
-        font.setWeight(50)
+        try:
+            font.setWeight(50)
+        except:
+            font.setWeight(QtGui.QFont.Thin)
         font.setItalic(False)
         font.setUnderline(False)
         font.setBold(False)
@@ -2439,7 +2443,10 @@ def RH_centerOnScreen (widg):
     Centers the window on the screen.'''
     # sayw(widg.width());sayw(widg.height())
     # sayw(widg.pos().x());sayw(widg.pos().y())
-    resolution = QtGui.QDesktopWidget().screenGeometry()
+    if hasattr(QtGui, "QScreen"):
+        resolution = QtGui.QScreen().availableGeometry()
+    else:
+        resolution = QtGui.QDesktopWidget().screenGeometry()
     xp=(resolution.width() / 2) - sizeX/2 # - (KSUWidget.frameSize().width() / 2)
     yp=(resolution.height() / 2) - sizeY/2 # - (KSUWidget.frameSize().height() / 2))
     # xp=widg.pos().x()-sizeXMax/2;yp=widg.pos().y()#+sizeY/2
