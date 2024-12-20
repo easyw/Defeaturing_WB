@@ -15,11 +15,11 @@
 #    for detail see the LICENCE text file.                                  *
 #****************************************************************************
 
-DWB_wb_version='v 1.2.2'
+DWB_wb_version='v 1.2.3'
 global myurlDWB
 myurlDWB='https://github.com/easyw/Defeaturing_WB'
 global mycommitsDWB
-mycommitsDWB=71 #v 1.2.2
+mycommitsDWB=74 #v 1.2.3
 
 
 import FreeCAD, FreeCADGui, Part, os, sys
