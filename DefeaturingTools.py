@@ -36,7 +36,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.3.6"
+__version__ = "v1.3.7"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -1813,8 +1813,8 @@ class Ui_DockWidget(object):
         DockWidget.setWindowIcon(icon)
         DockWidget.setToolTip("Defeaturing tools")
         DockWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
-        if hasattr(QtGui.QDockWidget, "AllDockWidgetFeatures"):
-            DockWidget.setFeatures(QtGui.QDockWidget.AllDockWidgetFeatures)
+        DockWidget.setFeatures(QtGui.QDockWidget.DockWidgetFloatable|QtGui.QDockWidget.DockWidgetMovable)
+        #DockWidget.setFeatures(QtGui.QDockWidget.AllDockWidgetFeatures)
         DockWidget.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea|QtCore.Qt.RightDockWidgetArea)
         DockWidget.setWindowTitle("Defeaturing Tools")
         self.dockWidgetContents = QtGui.QWidget()
@@ -1917,7 +1917,7 @@ class Ui_DockWidget(object):
         try:
             font.setWeight(50)
         except:
-            font.setWeight(QtGui.QFont.Thin)
+            font.setWeight(font.Weight(50))        
         font.setItalic(False)
         font.setUnderline(False)
         font.setBold(False)
@@ -2502,8 +2502,8 @@ if RH_singleInstance():
     RHmw = FreeCADGui.getMainWindow()                 # PySide # the active qt window, = the freecad window since we are inside it
     RHmw.addDockWidget(QtCore.Qt.RightDockWidgetArea,RHDockWidget)
     RHDockWidget.setFloating(True)  #undock
-    #RHDockWidget.resize(sizeX,sizeY)
-    RH_centerOnScreen(RHDockWidget)
+    RHDockWidget.resize(sizeX,sizeY)
+    ## RH_centerOnScreen(RHDockWidget)
     RHDockWidget.ui.Version.setText(__version__)
     
     if hasattr(Part, "OCC_VERSION"):
