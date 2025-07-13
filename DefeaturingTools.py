@@ -360,7 +360,7 @@ def merge_selected_faces_RH():
             for f in af_faces:
                 Part.show(f)
                 doc.ActiveObject.Label="face"
-            stop
+            break
         if RHDockWidget.ui.checkBox_Refine.isChecked():
             try:
                 _.removeSplitter()
@@ -503,7 +503,7 @@ def merge_faces_from_selected_objects_RH(refobj=None):
             for f in faces:
                 Part.show(f)
                 doc.ActiveObject.Label="face"
-            stop
+            break
         if RHDockWidget.ui.checkBox_Refine.isChecked():
             try:
                 _.removeSplitter()
@@ -901,7 +901,7 @@ def removeFaces_RH():
                     for f in faces:
                         Part.show(f)
                         doc.ActiveObject.Label="face"
-                stop
+                break
             #App.ActiveDocument.addObject('Part::Feature','Shell').Shape=_
             if RHDockWidget.ui.checkBox_Refine.isChecked():
                 try:
@@ -1258,7 +1258,7 @@ def cleaningFaces_RH():
             doc.addObject('Part::Feature','face').Shape=o.Shape
             new_faces.append(doc.ActiveObject)
             removesubtree([o])
-            # stop
+            # break
             # if not invert:
             #     try:
             #         print("try to create a Face w/ OpenSCAD2Dgeom")
@@ -1301,7 +1301,7 @@ def cleaningFaces_RH():
                     for f in faces:
                         Part.show(f)
                         doc.ActiveObject.Label="face"
-                stop
+                break
             #App.ActiveDocument.addObject('Part::Feature','Shell').Shape=_
             if RHDockWidget.ui.checkBox_Refine.isChecked():
                 try:
@@ -2419,7 +2419,7 @@ def dock_right_RH():
         try:
             t.tabifyDockWidget(cv,RHDockWidget)
             i_say( "Tabified done !")               
-            #stop
+            #break
         except:
             i_say('exception raised')
             pass
