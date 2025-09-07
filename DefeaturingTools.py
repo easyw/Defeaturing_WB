@@ -36,7 +36,7 @@ global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
 
-__version__ = "v1.3.9"
+__version__ = "v1.4.0"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -2496,6 +2496,23 @@ def RH_centerOnScreen (widg):
     yp=(resolution.height() / 2) - sizeY/2 # - (KSUWidget.frameSize().height() / 2))
     # xp=widg.pos().x()-sizeXMax/2;yp=widg.pos().y()#+sizeY/2
     widg.setGeometry(xp, yp, sizeX, sizeY)
+##
+def Df_centerOnScreen (widg):
+    '''centerOnScreen()
+    Centers the window on the screen.'''
+    # sayw(widg.width());sayw(widg.height())
+    # sayw(widg.pos().x());sayw(widg.pos().y())
+    if hasattr(QtGui.QGuiApplication, "primaryScreen"):
+        resolution = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+    else:
+        resolution = QtGui.QDesktopWidget().screenGeometry()
+    xp=(resolution.width() / 2) - sizeX/2 # - (KSUWidget.frameSize().width() / 2)
+    yp=(resolution.height() / 2) - sizeY/2 # - (KSUWidget.frameSize().height() / 2))
+    # xp=widg.pos().x()-sizeXMax/2;yp=widg.pos().y()#+sizeY/2
+    #wdsRHx=260;wdsRHy=534
+    widg.setGeometry(xp-wdsRHx/2, yp, sizeX, sizeY)
+##
+
 ##
 def onHelp():
     msg="""<b>Defeaturer Tools</b><br>

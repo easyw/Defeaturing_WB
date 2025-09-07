@@ -299,3 +299,26 @@ class FuzzyCommon:
  
 FreeCADGui.addCommand('FuzzyCommon',FuzzyCommon())
 ##
+class ResetPosition:
+    "Defeaturing reset position tool"
+
+    def GetResources(self):
+        return {'Pixmap'  : os.path.join( DefeaturingWB_icons_path , 'centering-w.svg') , # the name of a svg file available in the resources
+                     'MenuText': "Centering Widgets" ,
+                     'ToolTip' : "Centering Widgets\nManipulator workbench"}
+ 
+    def IsActive(self):
+        import os, sys
+        return True #False #True
+
+    def Activated(self):
+        # do something here...
+        #import kicadStepUptools
+        #reload_lib( kicadStepUptools )
+        import DefeaturingTools
+        reload_lib(DefeaturingTools)
+        DefeaturingTools.RHDockWidget.setFloating(True)
+        DefeaturingTools.Df_centerOnScreen(DefeaturingTools.RHDockWidget)
+
+FreeCADGui.addCommand('ResetPosition',ResetPosition())
+##
