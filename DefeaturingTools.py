@@ -20,8 +20,9 @@
 import FreeCAD, FreeCADGui, Draft, Part
 import re, os, sys
 import OpenSCADCommands, OpenSCAD2Dgeom, OpenSCADFeatures
-from PySide import QtCore, QtGui
+from PySide import QtCore, QtGui, QtWidgets
 import tempfile
+
 try:
     from PathScripts.PathUtils import horizontalEdgeLoop
     from PathScripts.PathUtils import horizontalFaceLoop
@@ -35,8 +36,10 @@ global rh_edges, rh_faces, rh_obj
 global rh_edges_names, rh_faces_names, rh_obj_name
 global created_faces, rh_faces_indexes, rh_edges_to_connect
 global force_recompute, invert
+global DF_dock_mode
+DF_dock_mode = ''
 
-__version__ = "v1.4.0"
+__version__ = "v1.4.1"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -321,6 +324,7 @@ def faces_clear_RH():
 
 def close_RH():
     """closing dialog"""
+    get_DFposition()
     RHDockWidget.deleteLater()
 
 def merge_selected_faces_RH():
@@ -2380,6 +2384,7 @@ def RH_singleInstance():
         if str(i.objectName()) == "DefeaturingTools": #"kicad StepUp 3D tools":
             #i_say (str(i.objectName())+' docked')
             #i.deleteLater()
+            get_DFposition()
             return False
     return True
 ##
@@ -2438,7 +2443,7 @@ def dock_right_RH():
         #     #KSUWidget.resize(sizeX,sizeY)
         #     d_tab.activateWindow()
         #     d_tab.raise_()
-
+    get_DFposition()
 ##
 def dock_left_RH():
     RHmw = FreeCADGui.getMainWindow()
@@ -2482,35 +2487,101 @@ def dock_left_RH():
     #    d_tab.activateWindow()
     #    d_tab.raise_()
     ##say ("focus on me!")
+    get_DFposition()
 ##
-def RH_centerOnScreen (widg):
+def RH_centerOnScreen (widget):
     '''centerOnScreen()
     Centers the window on the screen.'''
     # sayw(widg.width());sayw(widg.height())
     # sayw(widg.pos().x());sayw(widg.pos().y())
-    if hasattr(QtGui, "QScreen"):
-        resolution = QtGui.QScreen().availableGeometry()
-    else:
-        resolution = QtGui.QDesktopWidget().screenGeometry()
-    xp=(resolution.width() / 2) - sizeX/2 # - (KSUWidget.frameSize().width() / 2)
-    yp=(resolution.height() / 2) - sizeY/2 # - (KSUWidget.frameSize().height() / 2))
-    # xp=widg.pos().x()-sizeXMax/2;yp=widg.pos().y()#+sizeY/2
-    widg.setGeometry(xp, yp, sizeX, sizeY)
+    # import DefeaturingTools; import importlib; importlib.reload(DefeaturingTools)
+    # https://forum.freecad.org/viewtopic.php?p=537394#p537394
+    
+    mainWin = FreeCAD.Gui.getMainWindow()
+    #App.Console.PrintMessage(mainWin.geometry().center())
+    xp=mainWin.geometry().center().x()
+    yp=mainWin.geometry().center().y()
+    centerPoint = QtCore.QPoint(xp -sizeX/2, yp)
+    fg = widget.frameGeometry()
+    fg.moveCenter(centerPoint)
+    widget.move(fg.topLeft())
+    #xp=(mainWin.geometry().width() / 2) - sizeX/2 # - (KSUWidget.frameSize().width() / 2)
+    #yp=(mainWin.geometry().height() / 2) - sizeY/2 # - (KSUWidget.frameSize().height() / 2))
+    #widget.setGeometry(xp-wdsRHx/2, yp, sizeX, sizeY)
+    
+    #screens = QtGui.QGuiApplication.screens();
+    ## screenNum =  QtGui.QGuiApplication.screens.screenNumber()
+    #screenNum = int(QtGui.QGuiApplication.screenAt(QtCore.QPoint(10,10)).name()[-1])-1
+    ##centerPoint = QtGui.QScreen.availableGeometry(QtWidgets.QApplication.primaryScreen()).center()
+    #centerPoint = QtGui.QScreen.availableGeometry(screens[screenNum]).center()
+    #fg = widget.frameGeometry()
+    #fg.moveCenter(centerPoint)
+    #widget.move(fg.topLeft())
+    
+    #FreeCAD.Console.PrintMessage(str(screens)+' '+str(screenNum)+' '+QtGui.QGuiApplication.screenAt(QtCore.QPoint(10,10)).name()[-1])
+    
+    if 0:
+        
+        
+        if hasattr(QtGui.QGuiApplication, "primaryScreen"):
+            resolution = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+            cp=QtGui.QGuiApplication.primaryScreen().availableGeometry().center()
+            QtGui.QGuiApplication.moveCenter(cp)
+            screens =    QtGui.QGuiApplication.screens();
+            screenNum =  QtGui.QGuiApplication.screenNumber()
+            FreeCAD.Console.PrintMessage(str(screens)+' '+str(screenNum))
+        else:
+            resolution = QtGui.QDesktopWidget().screenGeometry()
+            screens =    QtGui.QDesktopWidget().screens();
+            screenNum = QtGui.QDesktopWidget().screenNumber()
+            FreeCAD.Console.PrintMessage(str(screens)+' '+str(screenNum))        
+        xp=(resolution.width() / 2) - sizeX/2 # - (KSUWidget.frameSize().width() / 2)
+        yp=(resolution.height() / 2) - sizeY/2 # - (KSUWidget.frameSize().height() / 2))
+        # xp=widg.pos().x()-sizeXMax/2;yp=widg.pos().y()#+sizeY/2
+        #wdsRHx=260;wdsRHy=534
+        widg.setGeometry(xp-wdsRHx/2, yp, sizeX, sizeY)
 ##
-def Df_centerOnScreen (widg):
-    '''centerOnScreen()
-    Centers the window on the screen.'''
-    # sayw(widg.width());sayw(widg.height())
-    # sayw(widg.pos().x());sayw(widg.pos().y())
-    if hasattr(QtGui.QGuiApplication, "primaryScreen"):
-        resolution = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+def set_DFposition():
+    global DF_dock_mode
+    
+    pg = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Defeaturing")
+    DF_dock_mode = pg.GetString("DF_dock")
+    if len (DF_dock_mode) == 0:
+        DF_dock_mode = 'float/350/300/302/268'
+    if 'float' in DF_dock_mode:
+        RHDockWidget.setFloating(True)  #undock
+        RHDockWidget.resize(sizeX,sizeY)
+        DF_geo = DF_dock_mode.split('/')
+        # print(a_geo)
+        RHDockWidget.activateWindow()
+        RHDockWidget.raise_()
+        if len (DF_geo) > 1:
+            RHDockWidget.setGeometry(int(DF_geo[1]), int(DF_geo[2]),int(DF_geo[3]), int(DF_geo[4]))
+            # print('setting position to: ', a_geo)
+    if DF_dock_mode == 'left':
+        dock_left_RH()
+        RHDockWidget.activateWindow()
+        RHDockWidget.raise_()
+    elif DF_dock_mode == 'right':
+        dock_right_RH()
+        RHDockWidget.activateWindow()
+        RHDockWidget.raise_()
+    FreeCAD.Console.PrintMessage("position set "+DF_dock_mode+'\n')
+##
+def get_DFposition():
+    global DF_dock_mode
+    t=FreeCADGui.getMainWindow()
+    if RHDockWidget.isFloating():
+        dg = RHDockWidget.geometry()
+        # print(ag)
+        DF_dock_mode = 'float/'+str(dg.x())+'/'+str(dg.y())+'/'+str(dg.width())+'/'+str(dg.height())
+    elif t.dockWidgetArea(RHDockWidget) == QtCore.Qt.RightDockWidgetArea:
+        DF_dock_mode = 'right'
     else:
-        resolution = QtGui.QDesktopWidget().screenGeometry()
-    xp=(resolution.width() / 2) - sizeX/2 # - (KSUWidget.frameSize().width() / 2)
-    yp=(resolution.height() / 2) - sizeY/2 # - (KSUWidget.frameSize().height() / 2))
-    # xp=widg.pos().x()-sizeXMax/2;yp=widg.pos().y()#+sizeY/2
-    #wdsRHx=260;wdsRHy=534
-    widg.setGeometry(xp-wdsRHx/2, yp, sizeX, sizeY)
+        DF_dock_mode = 'left'
+    pg = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Defeaturing")
+    pg.SetString("DF_dock",DF_dock_mode)
+    FreeCAD.Console.PrintMessage("position written "+DF_dock_mode+'\n')
 ##
 
 ##
@@ -2567,7 +2638,7 @@ if RH_singleInstance():
     RHDockWidget.resize(sizeX,sizeY)
     ## RH_centerOnScreen(RHDockWidget)
     RHDockWidget.ui.Version.setText(__version__)
-    
+    get_DFposition()
     if hasattr(Part, "OCC_VERSION"):
         OCCMV = Part.OCC_VERSION.split('.')[0]
         OCCmV = Part.OCC_VERSION.split('.')[1]
@@ -2577,7 +2648,7 @@ if RH_singleInstance():
 #raising up
 RHDockWidget.activateWindow()
 RHDockWidget.raise_()
-        
+
     # print (instance_nbr)
     # if instance_nbr >1:
     #     RH_killInstance()

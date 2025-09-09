@@ -318,7 +318,7 @@ class ResetPosition:
         import DefeaturingTools
         reload_lib(DefeaturingTools)
         DefeaturingTools.RHDockWidget.setFloating(True)
-        DefeaturingTools.Df_centerOnScreen(DefeaturingTools.RHDockWidget)
+        DefeaturingTools.RH_centerOnScreen(DefeaturingTools.RHDockWidget)
 
 FreeCADGui.addCommand('ResetPosition',ResetPosition())
 ##

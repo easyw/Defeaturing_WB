@@ -2,7 +2,7 @@
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
   <name>Defeaturing Workbench</name>
   <description>A set of tools to edit a Shape or a STEP model.</description>
-  <version>1.2.7</version>
+  <version>1.2.8</version>
   <maintainer email="easyw@katamail.com">Maui</maintainer>
   <license file="LICENSE">AGPLv3.0</license>
   <url type="repository" branch="master">https://github.com/easyw/Defeaturing_WB</url>
