@@ -39,7 +39,7 @@ global force_recompute, invert
 global DF_dock_mode
 DF_dock_mode = ''
 
-__version__ = "v1.4.1"
+__version__ = "v1.4.2"
 
 
 ## shape.sewShape(), shape.isClosed(), shape.isValid()
@@ -2384,7 +2384,7 @@ def RH_singleInstance():
         if str(i.objectName()) == "DefeaturingTools": #"kicad StepUp 3D tools":
             #i_say (str(i.objectName())+' docked')
             #i.deleteLater()
-            get_DFposition()
+            set_DFposition()
             return False
     return True
 ##
@@ -2638,7 +2638,7 @@ if RH_singleInstance():
     RHDockWidget.resize(sizeX,sizeY)
     ## RH_centerOnScreen(RHDockWidget)
     RHDockWidget.ui.Version.setText(__version__)
-    get_DFposition()
+    set_DFposition()
     if hasattr(Part, "OCC_VERSION"):
         OCCMV = Part.OCC_VERSION.split('.')[0]
         OCCmV = Part.OCC_VERSION.split('.')[1]
