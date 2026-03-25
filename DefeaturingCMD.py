@@ -81,6 +81,108 @@ class DefeatShapeFeature:
                 QtCore.QT_TRANSLATE_NOOP('DefeatShapeFeature',\
                 'Create Defeat Shape Parametric Feature')}
 FreeCADGui.addCommand('DefeatShapeFeature',DefeatShapeFeature())
+#
+class CommonShapeFeature:
+    def IsActive(self):
+        #print ('isactive')
+        if hasattr(Part, "OCC_VERSION"):
+            OCCMV = Part.OCC_VERSION.split('.')[0]
+            OCCmV = Part.OCC_VERSION.split('.')[1]
+            if (int(OCCMV)>= 7) and (int(OCCmV)>= 3):
+                sel = FreeCADGui.Selection.getSelection()
+                if len (sel) > 1:
+                    return True
+        else:
+            return False
+
+    def Activated(self):
+    #def execute():
+        import Part, DefeaturingFeature
+        #print ('activated')
+        sel=FreeCADGui.Selection.getSelection()
+        if len (sel) >1:
+            FreeCAD.ActiveDocument.openTransaction('pfcm')
+            newobj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython",'FuzzyCommonP')
+            DefeaturingFeature.CommonFuzzyShape(newobj,sel)
+            DefeaturingFeature.ViewProviderTree(newobj.ViewObject)
+            newobj.Label='fuzzyCommon' #_%s_%s' % (sel[0].Label,sel[1].Label)
+            for s in sel:
+                s.ViewObject.hide()
+            FreeCAD.ActiveDocument.commitTransaction()
+            FreeCAD.ActiveDocument.recompute()
+    def GetResources(self):
+        return {'Pixmap'  : os.path.join( DefeaturingWB_icons_path , 'FuzzyCommonRed.svg') , # the name of a svg file available in the resources
+                    'MenuText': "Fuzzy boolean Parametric Intersection" ,
+                    'ToolTip' : "Fuzzy boolean Parametric Intersection"}
+FreeCADGui.addCommand('CommonShapeFeature',CommonShapeFeature())
+##
+class UnionShapeFeature:
+    def IsActive(self):
+        #print ('isactive')
+        if hasattr(Part, "OCC_VERSION"):
+            OCCMV = Part.OCC_VERSION.split('.')[0]
+            OCCmV = Part.OCC_VERSION.split('.')[1]
+            if (int(OCCMV)>= 7) and (int(OCCmV)>= 3):
+                sel = FreeCADGui.Selection.getSelection()
+                if len (sel) > 1:
+                    return True
+        else:
+            return False
+
+    def Activated(self):
+    #def execute():
+        import Part, DefeaturingFeature
+        #print ('activated')
+        sel=FreeCADGui.Selection.getSelection()
+        if len (sel) >1:
+            FreeCAD.ActiveDocument.openTransaction('pfu')
+            newobj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython",'FuzzyFusionP')
+            DefeaturingFeature.FusionFuzzyShape(newobj,sel)
+            DefeaturingFeature.ViewProviderTree(newobj.ViewObject)
+            newobj.Label='fuzzyFusion' #_%s_%s' % (sel[0].Label,sel[1].Label)
+            for s in sel:
+                s.ViewObject.hide()
+            FreeCAD.ActiveDocument.commitTransaction()
+            FreeCAD.ActiveDocument.recompute()
+    def GetResources(self):
+        return {'Pixmap'  : os.path.join( DefeaturingWB_icons_path , 'FuzzyFusionRed.svg') , # the name of a svg file available in the resources
+                    'MenuText': "Fuzzy boolean Parametric Fusion" ,
+                    'ToolTip' : "Fuzzy boolean Parametric Fusion"}
+FreeCADGui.addCommand('UnionShapeFeature',UnionShapeFeature())
+##
+class CutShapeFeature:
+    def IsActive(self):
+        #print ('isactive')
+        if hasattr(Part, "OCC_VERSION"):
+            OCCMV = Part.OCC_VERSION.split('.')[0]
+            OCCmV = Part.OCC_VERSION.split('.')[1]
+            if (int(OCCMV)>= 7) and (int(OCCmV)>= 3):
+                sel = FreeCADGui.Selection.getSelection()
+                if len (sel) == 2:
+                    return True
+        else:
+            return False
+
+    def Activated(self):
+    #def execute():
+        import Part, DefeaturingFeature
+        #print ('activated')
+        sel=FreeCADGui.Selection.getSelection()
+        if len (sel) == 2:
+            FreeCAD.ActiveDocument.openTransaction('pfc')
+            newobj=FreeCAD.ActiveDocument.addObject("Part::FeaturePython",'FuzzyCutP')
+            DefeaturingFeature.CutFuzzyShape(newobj,sel[0],sel[1])
+            DefeaturingFeature.ViewProviderTree(newobj.ViewObject)
+            newobj.Label='fuzzyCut' #_%s_%s' % (sel[0].Label,sel[1].Label)
+            sel[0].ViewObject.hide()
+            sel[1].ViewObject.hide()
+            FreeCAD.ActiveDocument.commitTransaction()
+            FreeCAD.ActiveDocument.recompute()
+    def GetResources(self):
+        return {'Pixmap'  : os.path.join( DefeaturingWB_icons_path , 'FuzzyCutRed.svg') , # the name of a svg file available in the resources
+                    'MenuText': "Fuzzy boolean Parametric Cut" ,
+                    'ToolTip' : "Fuzzy boolean Parametric Cut"}
+FreeCADGui.addCommand('CutShapeFeature',CutShapeFeature())
 ##
 
 class DefeaturingTools:
@@ -204,8 +306,8 @@ class refineFeatureTool:
                     docG.ActiveObject.PointColor=docG.getObject(selobj.Object.Name).PointColor
                     docG.ActiveObject.DiffuseColor=docG.getObject(selobj.Object.Name).DiffuseColor
                     docG.ActiveObject.Transparency=docG.getObject(selobj.Object.Name).Transparency
-                    #newobj.Label='r_%s' % selobj.Object.Label
-                    newobj.Label=selobj.Object.Label
+                    newobj.Label='%s_refined' % selobj.Object.Label
+                    #newobj.Label=selobj.Object.Label
                     selobj.Object.ViewObject.hide()
             doc.recompute()
 FreeCADGui.addCommand('refineFeatureTool',refineFeatureTool())

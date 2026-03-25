@@ -45,7 +45,13 @@ class ViewProviderTree:
             #     if self.upd: return (defeat_icon)
             # except: pass
             return(defeat_icon)
-
+        if isinstance(self.Object.Proxy,CutFuzzyShape):
+            return(os.path.join(DefeaturingWB_icons_path,'FuzzyCutRed.svg'))
+        if isinstance(self.Object.Proxy,FusionFuzzyShape):
+            return(os.path.join(DefeaturingWB_icons_path,'FuzzyFusionRed.svg'))
+        if isinstance(self.Object.Proxy,CommonFuzzyShape):
+            return(os.path.join(DefeaturingWB_icons_path,'FuzzyCommonRed.svg'))
+#
     def updateData(self, fp, prop):
         #print (fp.Label)
         #if fp.Label.find('_ERR') != -1:
@@ -99,8 +105,22 @@ class ViewProviderTree:
         objs = []
         if hasattr(self.Object.Proxy,"Base"):
             objs.append(self.Object.Proxy.Base)
+        #if hasattr(self.Object,"Base"):
+        #    objs.append(self.Object.Base)
+        if hasattr(self.Object,"Tool"):
+            objs.append(self.Object.Tool)
         if hasattr(self.Object,"Base"):
-            objs.append(self.Object.Base)
+            if isinstance(self.Object.Base, list):
+                for o in self.Object.Base:
+                    objs.append(o)
+            else:
+                objs.append(self.Object.Base)
+        if hasattr(self.Object,"Shapes"):
+            if isinstance(self.Object.Shapes, list):
+                for o in self.Object.Shapes:
+                    objs.append(o)
+            else:
+                objs.append(self.Object.Shapes)
         if hasattr(self.Object,"Objects"):
             objs.extend(self.Object.Objects)
         if hasattr(self.Object,"Components"):
@@ -270,32 +290,185 @@ class DefeatShape:
         else:
             print('first executing')
 ##
+class CommonFuzzyShape:
+    '''return a fuzzy fusion shape'''
+#    def __init__(self, compNames, obj, child=None):
+    def __init__(self, obj, sel, child=None):
+        import FreeCAD, FreeCADGui
+        obj.addProperty("App::PropertyLinkList","Shapes","Base",
+                        "The objects that must be fuzzy intersected")
+        obj.addProperty("App::PropertyBool","Refine" ,"Boolean",
+                         "Refine the fuzzy intersection")
+        obj.addProperty("App::PropertyDistance", "fuzzyTol","fuzzy Tolerance",
+                         "The Tolerance that will applied in fuzzy intersection")
+        obj.Proxy = self
+        #sel = FreeCADGui.Selection.getSelection()
+        shapes = []
+        objs_list = []
+        for s in sel:
+            shapes.append(s.Shape)
+            objs_list.append(s)
+        obj.Shapes = objs_list
+        obj.fuzzyTol = 0.001 #1um
+        obj.Refine = False
+        # obj.Components = compNames
 
-## class UnionFuzzyShape:
-##     '''return a fuzzy unioned shape'''
-##     def __init__(self, compNames, obj, child=None):
-##         #obj.addProperty("App::PropertyLink","Base","Base",
-##         #                "The base object that must be fuzzy unioned")
-##         obj.addProperty("App::PropertyStringList","Components","Components",
-##                         "List of Objects to be fuzzy unioned")
-##         obj.Proxy = self
-##         obj.Base = child
-##         obj.Components = compNames
-## 
-##     def onChanged(self, fp, prop):
-##         "Do something when a property has changed"
-##         pass
-## 
-##     def execute(self, fp):
-##         if len (fp.Components) > 1:
-##             makeOp=True
-##             for name in fp.Components:
-##                 if not doc.getObject(name).Shape.isValid():
-##                     makeOp=False
-##             if makeOp:
-##                 import OpenSCADUtils, FuzzyTools
-##                 #sh=fp.Base.Shape.removeSplitter()
-##                 ### do my ops
-##                 result_shape = FuzzyTools.fuzzyUnion()
-##                 fp.Shape=OpenSCADUtils.applyPlacement(result_shape)
-## 
+    def onChanged(self, fp, prop):
+        "Do something when a property has changed"
+        import FreeCAD, FreeCADGui
+        pass
+
+    def execute(self, fp):
+        import FreeCAD, FreeCADGui
+        makeOp=True
+        for o in fp.Shapes:
+            if not(o.Shape.isValid()):
+                makeOp=False
+        if makeOp:
+            import OpenSCADUtils, FuzzyTools
+            #sh=fp.Base.Shape.removeSplitter()
+            ### do my ops
+            # fp.Shape = FuzzyTools.fuzzyCutP()
+            shapes=[]
+            for o in fp.Shapes[1:]:
+                shapes.append(o.Shape)
+            fp.Shape = fp.Shapes[0].Shape.common(shapes, fp.fuzzyTol)
+            if fp.Refine:
+                fp.Shape=fp.Shape.removeSplitter()
+            fp.Shape=OpenSCADUtils.applyPlacement(fp.Shape)
+            #fp.Label='FuzzyCommon_%s_%s' % (fp.Shapes[0].Label,fp.Shapes[1].Label)
+            FreeCADGui.Selection.clearSelection()
+            #FreeCADGui.Selection.addSelection(FreeCAD.ActiveDocument.Name,fp.Name)
+            docG=FreeCADGui.ActiveDocument
+            if hasattr(docG.getObject(fp.Shapes[0].Name),'ShapeColor'):
+                docG.getObject(fp.Name).ShapeColor  =  docG.getObject(fp.Shapes[0].Name).ShapeColor
+            if hasattr(docG.getObject(fp.Shapes[0].Name),'LineColor'):
+                docG.getObject(fp.Name).LineColor   =  docG.getObject(fp.Shapes[0].Name).LineColor
+            if hasattr(docG.getObject(fp.Shapes[0].Name),'PointColor'):
+                docG.getObject(fp.Name).PointColor  =  docG.getObject(fp.Shapes[0].Name).PointColor
+            if hasattr(docG.getObject(fp.Shapes[0].Name),'DiffuseColor'):
+                docG.getObject(fp.Name).DiffuseColor=  docG.getObject(fp.Shapes[0].Name).DiffuseColor
+            if hasattr(docG.getObject(fp.Shapes[0].Name),'Transparency'):
+                docG.getObject(fp.Name).Transparency=  docG.getObject(fp.Shapes[0].Name).Transparency
+#
+#
+class FusionFuzzyShape:
+    '''return a fuzzy fusion shape'''
+#    def __init__(self, compNames, obj, child=None):
+    def __init__(self, obj, sel, child=None):
+        import FreeCAD, FreeCADGui
+        obj.addProperty("App::PropertyLinkList","Shapes","Base",
+                        "The objects that must be fuzzy unioned")
+        obj.addProperty("App::PropertyBool","Refine" ,"Boolean",
+                         "Refine the fuzzy union")
+        obj.addProperty("App::PropertyDistance", "fuzzyTol","fuzzy Tolerance",
+                         "The Tolerance that will applied in fuzzy union")
+        obj.Proxy = self
+        #sel = FreeCADGui.Selection.getSelection()
+        shapes = []
+        objs_list = []
+        for s in sel:
+            shapes.append(s.Shape)
+            objs_list.append(s)
+        obj.Shapes = objs_list
+        obj.fuzzyTol = 0.001 #1um
+        obj.Refine = False
+        # obj.Components = compNames
+
+    def onChanged(self, fp, prop):
+        "Do something when a property has changed"
+        import FreeCAD, FreeCADGui
+        pass
+
+    def execute(self, fp):
+        import FreeCAD, FreeCADGui
+        makeOp=True
+        for o in fp.Shapes:
+            if not(o.Shape.isValid()):
+                makeOp=False
+        if makeOp:
+            import OpenSCADUtils, FuzzyTools
+            #sh=fp.Base.Shape.removeSplitter()
+            ### do my ops
+            # fp.Shape = FuzzyTools.fuzzyCutP()
+            shapes=[]
+            for o in fp.Shapes[1:]:
+                shapes.append(o.Shape)
+            fp.Shape = fp.Shapes[0].Shape.multiFuse(shapes, fp.fuzzyTol)
+            if fp.Refine:
+                fp.Shape=fp.Shape.removeSplitter()
+            #fp.Label='FuzzyFusion_%s_%s' % (fp.Shapes[0].Label,fp.Shapes[1].Label)
+            fp.Shape=OpenSCADUtils.applyPlacement(fp.Shape)
+            FreeCADGui.Selection.clearSelection()
+            #FreeCADGui.Selection.addSelection(FreeCAD.ActiveDocument.Name,fp.Name)
+            docG=FreeCADGui.ActiveDocument
+            if hasattr(docG.getObject(fp.Shapes[0].Name),'ShapeColor'):
+                docG.getObject(fp.Name).ShapeColor  =  docG.getObject(fp.Shapes[0].Name).ShapeColor
+            if hasattr(docG.getObject(fp.Shapes[0].Name),'LineColor'):
+                docG.getObject(fp.Name).LineColor   =  docG.getObject(fp.Shapes[0].Name).LineColor
+            if hasattr(docG.getObject(fp.Shapes[0].Name),'PointColor'):
+                docG.getObject(fp.Name).PointColor  =  docG.getObject(fp.Shapes[0].Name).PointColor
+            if hasattr(docG.getObject(fp.Shapes[0].Name),'DiffuseColor'):
+                docG.getObject(fp.Name).DiffuseColor=  docG.getObject(fp.Shapes[0].Name).DiffuseColor
+            if hasattr(docG.getObject(fp.Shapes[0].Name),'Transparency'):
+                docG.getObject(fp.Name).Transparency=  docG.getObject(fp.Shapes[0].Name).Transparency
+#
+class CutFuzzyShape:  #TBD refine
+    '''return a fuzzy cut shape'''
+#    def __init__(self, compNames, obj, child=None):
+    def __init__(self, obj, o1, o2, child=None):
+        obj.addProperty("App::PropertyLink","Base","Base",
+                        "The base object that must be fuzzy cut")
+        obj.addProperty("App::PropertyLink","Tool","Base",
+                        "The Tool object that will do fuzzy cut")
+        obj.addProperty("App::PropertyBool","Refine" ,"Boolean",
+                         "Refine the fuzzy union")
+        obj.addProperty("App::PropertyDistance", "fuzzyTol","fuzzy Tolerance",
+                         "The Tolerance that will applied in fuzzy cut")
+                        # App::PropertyLength???
+        # obj.addProperty("App::PropertyStringList","Components","Components",
+        #                 "List of Objects to be fuzzy cut")
+        obj.Proxy = self
+        obj.Base = o1
+        obj.Tool = o2
+        #child= o1,o2
+        obj.fuzzyTol = 0.001 #1um
+        obj.Refine = False
+        # obj.Components = compNames
+
+    def onChanged(self, fp, prop):
+        "Do something when a property has changed"
+        import FreeCAD, FreeCADGui
+        pass
+
+    def execute(self, fp):
+        if fp.Base and fp.Base.Shape.isValid():
+            makeOp=True
+        if fp.Tool and fp.Tool.Shape.isValid():
+            makeOp=True
+        if makeOp:
+            import OpenSCADUtils, FuzzyTools
+            #sh=fp.Base.Shape.removeSplitter()
+            ### do my ops
+            # fp.Shape = FuzzyTools.fuzzyCutP()
+            fp.Shape=fp.Base.Shape.cut(fp.Tool.Shape, fp.fuzzyTol)
+            fp.Shape=OpenSCADUtils.applyPlacement(fp.Shape)
+            if fp.Refine:
+                fp.Shape=fp.Shape.removeSplitter()
+            import FreeCAD, FreeCADGui
+            FreeCADGui.Selection.clearSelection()
+            #FreeCADGui.Selection.addSelection(FreeCAD.ActiveDocument.Name,fp.Name)
+            docG=FreeCADGui.ActiveDocument
+            if hasattr(docG.getObject(fp.Base.Name),'ShapeColor'):
+                docG.getObject(fp.Name).ShapeColor  =  docG.getObject(fp.Base.Name).ShapeColor
+            if hasattr(docG.getObject(fp.Base.Name),'LineColor'):
+                docG.getObject(fp.Name).LineColor   =  docG.getObject(fp.Base.Name).LineColor
+            if hasattr(docG.getObject(fp.Base.Name),'PointColor'):
+                docG.getObject(fp.Name).PointColor  =  docG.getObject(fp.Base.Name).PointColor
+            if hasattr(docG.getObject(fp.Base.Name),'DiffuseColor'):
+                docG.getObject(fp.Name).DiffuseColor=  docG.getObject(fp.Base.Name).DiffuseColor
+            if hasattr(docG.getObject(fp.Base.Name),'Transparency'):
+                docG.getObject(fp.Name).Transparency=  docG.getObject(fp.Base.Name).Transparency
+#
+
+#class CommonFuzzyShape:  #TBD list of Shapes, refine

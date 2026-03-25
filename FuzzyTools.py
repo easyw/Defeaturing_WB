@@ -21,7 +21,7 @@ import FreeCAD, FreeCADGui, Draft, Part
 import re, os, sys
 from PySide import QtCore, QtGui
 
-__version__ = "v1.0.2"
+__version__ = "v1.0.3"
 
 def f_say(msg):
     FreeCAD.Console.PrintMessage(msg)
@@ -67,9 +67,14 @@ def fuzzyCut():
             added = doc.ActiveObject
         docG.getObject(sel[0].Name).Visibility=False
         docG.getObject(sel[1].Name).Visibility=False
-        docG.getObject(added.Name).ShapeColor=docG.getObject(sel[0].Name).ShapeColor
-        docG.getObject(added.Name).Transparency=docG.getObject(sel[0].Name).Transparency
-        docG.getObject(added.Name).DisplayMode=docG.getObject(sel[0].Name).DisplayMode
+        if hasattr(docG.getObject(sel[0].Name),'ShapeColor'):
+            docG.getObject(added.Name).ShapeColor=docG.getObject(sel[0].Name).ShapeColor
+        if hasattr(docG.getObject(sel[0].Name),'Transparency'):
+            docG.getObject(added.Name).Transparency=docG.getObject(sel[0].Name).Transparency
+        try:
+            docG.getObject(added.Name).DisplayMode=docG.getObject(sel[0].Name).DisplayMode
+        except:
+            pass
         added.Label = 'CutFuzzy'
         doc.recompute()
 ##
@@ -97,9 +102,14 @@ def fuzzyUnion():
     added = doc.ActiveObject
     for s in sel:
         docG.getObject(s.Name).Visibility=False
-    docG.getObject(added.Name).ShapeColor=docG.getObject(sel[0].Name).ShapeColor
-    docG.getObject(added.Name).Transparency=docG.getObject(sel[0].Name).Transparency
-    docG.getObject(added.Name).DisplayMode=docG.getObject(sel[0].Name).DisplayMode
+        if hasattr(docG.getObject(sel[0].Name),'ShapeColor'):
+            docG.getObject(added.Name).ShapeColor=docG.getObject(sel[0].Name).ShapeColor
+        if hasattr(docG.getObject(sel[0].Name),'Transparency'):
+            docG.getObject(added.Name).Transparency=docG.getObject(sel[0].Name).Transparency
+        try:
+            docG.getObject(added.Name).DisplayMode=docG.getObject(sel[0].Name).DisplayMode
+        except:
+            pass
     added.Label = 'UnionFuzzy'
     doc.recompute()
 ##
@@ -127,9 +137,14 @@ def fuzzyCommon():
     added = doc.ActiveObject
     for s in sel:
         docG.getObject(s.Name).Visibility=False
-    docG.getObject(added.Name).ShapeColor=docG.getObject(sel[0].Name).ShapeColor
-    docG.getObject(added.Name).Transparency=docG.getObject(sel[0].Name).Transparency
-    docG.getObject(added.Name).DisplayMode=docG.getObject(sel[0].Name).DisplayMode
+    if hasattr(docG.getObject(sel[0].Name),'ShapeColor'):
+        docG.getObject(added.Name).ShapeColor=docG.getObject(sel[0].Name).ShapeColor
+    if hasattr(docG.getObject(sel[0].Name),'Transparency'):
+        docG.getObject(added.Name).Transparency=docG.getObject(sel[0].Name).Transparency
+    try:
+        docG.getObject(added.Name).DisplayMode=docG.getObject(sel[0].Name).DisplayMode
+    except:
+        pass
     added.Label = 'CommonFuzzy'
     doc.recompute()
 ##
