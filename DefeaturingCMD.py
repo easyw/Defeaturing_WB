@@ -18,11 +18,22 @@ import dft_locator
 
 
 try:
-    from PathScripts.PathUtils import horizontalEdgeLoop
-    from PathScripts.PathUtils import horizontalFaceLoop
-    from PathScripts.PathUtils import loopdetect
+    import CAM
 except:
-    FreeCAD.Console.PrintError('Path WB not found\n')
+    import Path
+    CAM = Path
+
+try:
+    import PathScripts.PathUtils
+    from PathScripts.PathUtils import horizontalEdgeLoop
+    if hasattr(PathScripts.PathUtils, 'horizontalFaceLoop'):
+        from PathScripts.PathUtils import horizontalFaceLoop
+    else:
+        from PathScripts.PathUtils import horizontalFaceLoops
+    from PathScripts.PathUtils import loopdetect
+    import PathCommands
+except:
+    FreeCAD.Console.PrintError('Path WB not found Defeaturing WB\n')
 
 reload_Gui=False#True
 
