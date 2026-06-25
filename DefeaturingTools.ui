@@ -581,7 +581,7 @@ of the selected Objects</string>
      </rect>
     </property>
     <property name="toolTip">
-     <string notr="true">make Edge from selected Vertexes</string>
+     <string notr="true">make Edge from selected Vertices</string>
     </property>
     <property name="text">
      <string notr="true"/>

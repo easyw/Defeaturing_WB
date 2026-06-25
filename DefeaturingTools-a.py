@@ -200,7 +200,7 @@ class Ui_DockWidget(object):
         self.PB_right.setObjectName("PB_right")
         self.PB_makeEdge = QtGui.QPushButton(self.dockWidgetContents)
         self.PB_makeEdge.setGeometry(QtCore.QRect(12, 468, 32, 32))
-        self.PB_makeEdge.setToolTip("make Edge from selected Vertexes")
+        self.PB_makeEdge.setToolTip("make Edge from selected Vertices")
         self.PB_makeEdge.setText("")
         self.PB_makeEdge.setObjectName("PB_makeEdge")
         self.PB_expSTEP = QtGui.QPushButton(self.dockWidgetContents)
