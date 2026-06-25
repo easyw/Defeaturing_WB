@@ -5,6 +5,6 @@
 #*  Copyright (c) 2018                                                      *
 #*  Maurice easyw@katamail.com                                              *
 #*                                                                          *
-#*  Defeaturing WB           *
+#*  Defeaturing WB                                                          *
 #*                                                                          *
 
